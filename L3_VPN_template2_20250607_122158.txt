@@ -1,0 +1,35 @@
+Based on the provided sample configuration and the details from the user query, we can generate the final configuration file for the L3 VPN with the specified parameters. 
+
+From the data provided, we can extract the necessary variables for substituting into the sample configuration:
+
+- VRF Name: `Client_A`
+- Loopback of PE: `10.10.10.4` (Router ID of PE-1)
+- AS Number of PE: This is not explicitly provided, so we will assume a hypothetical value (e.g., `65000`).
+- Route Target: Given the context, we can assume a route target, for instance, `65000:100` for the export/import. You might want to adjust this value as per your exact requirements.
+- Interface of PE: Interface found for PE-1 is `GigabitEthernet0/1`.
+- Neighbour IP of CE Interface: The given IP of the CE interface (linked to PE) is `10.0.4.1`.
+- AS Number of CE: This might also need a hypothetical value (e.g., `65001`).
+
+Here’s how the final configuration would look:
+
+```
+vrf definition Client_A
+    rd 10.10.10.4:65000
+    route-target export 65000:100
+    route-target import 65000:100
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1
+    vrf forwarding Client_A 
+!
+router bgp 65000
+    address-family ipv4 vrf Client_A 
+        neighbour 10.0.4.1 remote-as 65001
+        neighbour 10.0.4.1 activate  
+    exit-address-family 
+end
+```
+
+This configuration file can be used to push the L3 VPN setup for the VRF named 'Client_A' on the specified PE router. Adjust any hypothetical values as necessary to reflect your actual network configuration.
