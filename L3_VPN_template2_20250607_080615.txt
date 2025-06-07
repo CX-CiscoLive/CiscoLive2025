@@ -1,0 +1,37 @@
+Based on the provided data and user query, here is the generated L3 VPN configuration file for the specified parameters:
+
+```plaintext
+vrf definition Client_A
+    rd 10.10.10.4:100
+    route-target export 100:1
+    route-target import 100:1
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1
+    vrf forwarding Client_A
+!
+router bgp 100
+    address-family ipv4 vrf Client_A
+        neighbour 10.0.4.1 remote-as 200
+        neighbour 10.0.4.1 activate  
+    exit-address-family 
+end
+```
+
+### Explanation of the Configuration:
+- **VRF Definition:** 
+  - Name: `Client_A`
+  - Route Distinguisher (RD): `10.10.10.4:100` (using the `router_id` of the PE router `10.10.10.4` and an example AS number `100`).
+  - Route Target: Here, I chose `100:1` for both export and import; it can be adjusted based on actual requirements.
+
+- **Interface Configuration:** 
+  - The PE's interface connected to the CE is defined as `GigabitEthernet0/1` and is associated with the VRF `Client_A`.
+
+- **BGP Configuration:** 
+  - The PE's AS number is assumed to be `100` (derived from the context, but can vary based on actual settings).
+  - The CE's remote AS is exemplified as `200`.
+  - The `neighbour` command points to the IP address of the CE interface `10.0.4.1`.
+
+Adjust any parameters (like RD, Route Target, AS numbers, etc.) as necessary to fit your network's specific configurations.
