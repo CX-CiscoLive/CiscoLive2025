@@ -1,0 +1,29 @@
+Based on the provided sample configuration and the values given in the user query, here is the generated configuration file for the L3 VPN setup with the VRF name as 'Client_A' on the PE router ('PE-1'):
+
+```plaintext
+vrf definition Client_A
+    rd 10.10.10.4:65001  ! Assuming the AS number for the PE is 65001
+    route-target export 65001:100  ! Assuming example route target for export
+    route-target import 65001:100  ! Assuming example route target for import
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1  ! Interface on PE router
+    vrf forwarding Client_A 
+!
+router bgp 65001  ! BGP AS Number for PE-1
+    address-family ipv4 vrf Client_A
+        neighbour 10.0.4.1 remote-as 65002  ! Assuming the AS number for the CE is 65002
+        neighbour 10.0.4.1 activate
+    exit-address-family 
+end
+```
+
+### Notes:
+1. **Route Distinguisher (RD)**: Assumed to be the loopback IP of the PE (10.10.10.4) followed by the assumed AS number (65001). Adjust if different.
+2. **Route Targets**: Assumed values (65001:100) for example purposes. Modify as needed based on your actual route target requirements.
+3. **BGP AS Numbers**: The AS number for the CE is also assumed (65002) for illustration. Adjust according to your network setup.
+4. **Interfaces**: Used the interface linked in the query (`GigabitEthernet0/1` on the PE). Verify or modify as required per your network configuration. 
+
+Make sure to confirm the values and adjust them according to your specific network design and policies before pushing the configuration into NSO.
