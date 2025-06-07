@@ -1,0 +1,38 @@
+Based on the provided sample configuration and the details from the user query, here is the final configuration file for the L3 VPN with the specified details:
+
+```plaintext
+vrf definition Client_A
+    rd 10.0.4.1:65001
+    route-target export 65001:100
+    route-target import 65001:100
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1
+    vrf forwarding Client_A 
+!
+router bgp 65001
+    address-family ipv4 vrf Client_A 
+        neighbour 10.0.4.2 remote-as 65002
+        neighbour 10.0.4.2 activate  
+    exit-address-family 
+end
+```
+
+### Explanation of the Configuration:
+
+1. **VRF Definition**: 
+   - The VRF name is set to `Client_A`.
+   - The Route Distinguisher (RD) is defined using the loopback IP `10.0.4.1` and an arbitrary AS number `65001` which is assumed from the context. The AS number can be adjusted based on actual configurations.
+   - Route Targets for import and export are also defined with an example value `65001:100`.
+
+2. **Interface Configuration**:
+   - The interface `GigabitEthernet0/1` on the PE (Provider Edge) router is configured to associate with the `Client_A` VRF.
+
+3. **BGP Configuration**:
+   - BGP is configured for the AS number `65001`.
+   - The BGP neighbor is specified as `10.0.4.2` (the connected interface IP of CE-A1 to PE-1), with its remote AS set to `65002`. This should also be adjusted based on actual configurations.
+
+### Note:
+Ensure that the AS numbers, route targets, and other parameters align with the real network context and policies in use. Adjust the configuration flags and details according to the specific network setup you are working with.
