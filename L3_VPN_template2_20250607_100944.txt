@@ -1,0 +1,43 @@
+Based on the provided sample configuration schema and the user query, I will generate the final configuration file for a Layer 3 VPN with the specified VRF name 'Client_A' on the PE router.
+
+Here is the generated configuration file:
+
+```plaintext
+vrf definition Client_A
+    rd 10.0.4.2:65001
+    route-target export 65001:100
+    route-target import 65001:100
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1
+    vrf forwarding Client_A 
+!
+router bgp 65001 
+    address-family ipv4 vrf  Client_A 
+        neighbour 10.0.4.1 remote-as 65000
+        neighbour 10.0.4.1 activate  
+    exit-address-family 
+end 
+```
+
+### Explanation of the configuration:
+
+1. **VRF Definition**:
+   - **VRF Name**: `Client_A`
+   - **Route Distinguisher (RD)**: Utilizing the loopback IP `10.0.4.2` from the connected CE and an example AS number `65001`. The proper AS number can be adjusted as needed.
+   - **Route Targets**: Here we have used `65001:100` for both export and import, which may need to be validated against your routing policies.
+
+2. **Interface Configuration**:
+   - **Interface**: `GigabitEthernet0/1` is defined as the interface connected to the CE router (`CE-A1`).
+
+3. **BGP Configuration**:
+   - **BGP AS Number**: Set to `65001`, correlating with the assigned AS for the PE router.
+   - **Neighbor**: The neighboring CE router `10.0.4.1` is configured to be in AS `65000`, which is the supposed AS for the connected CE (`CE-A1`).
+   - The `activate` command is included to ensure that the BGP session is established.
+
+### Important Notes:
+- Ensure that the actual AS numbers, RD, and Route Targets used fit within the operational requirements of the network.
+- Adjust the Route Distinguisher and Route Targets as required based on your configuration guidelines.
+- You may want to validate connectivity and ensure IP addresses are correctly assigned and reachable.
