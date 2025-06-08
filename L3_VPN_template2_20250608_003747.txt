@@ -1,0 +1,32 @@
+Based on the provided sample configuration and user query, the final configuration file to push into NSO for the L3 VPN service with the specified VRF name will be as follows:
+
+```plaintext
+vrf definition Client_A
+    rd 10.0.4.1:65001
+    route-target export 65001:100
+    route-target import 65001:100
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1
+    vrf forwarding Client_A 
+!
+router bgp 65001
+    address-family ipv4 vrf Client_A 
+        neighbour 10.0.4.2 remote-as 65002
+        neighbour 10.0.4.2 activate  
+    exit-address-family 
+end 
+```
+
+### Explanation of Variables:
+- **VRF Name**: Set to 'Client_A' as per user request.
+- **Loopback of PE (router_id)**: From the `connectedRouter` of PE-1, which is `10.0.4.1`.
+- **AS Number of PE**: Inferred to be `65001` for PE-1.
+- **Route Target**: Route targets are set as `65001:100` for this setup (common convention, can be adjusted based on needs).
+- **Interface of PE**: Taken from the `connectedInterface`, which is `GigabitEthernet0/1`.
+- **Neighbour IP of CE Interface**: Derived from the CE interface's IP address, which is `10.0.4.2`.
+- **AS Number of CE**: Assuming the neighbouring CE router would typically have its own AS number. Let's say it is `65002`.
+
+Please adjust the AS numbers and route targets according to your specific requirements if needed.
