@@ -1,0 +1,36 @@
+Based on the user query and the provided variable values, the configuration file for the L3 VPN service with the specified details will be generated. The values for the variables will be extracted from the records and substituted into the sample configuration.
+
+### Configuration Output:
+
+```plaintext
+vrf definition Client_A
+    rd 10.0.4.1:65000
+    route-target export 65000:1
+    route-target import 65000:1
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1
+    vrf forwarding Client_A 
+!
+router bgp 65000 
+    address-family ipv4 vrf Client_A 
+        neighbour 10.0.4.2 remote-as 65002
+        neighbour 10.0.4.2 activate  
+    exit-address-family 
+end
+```
+
+### Explanation of Substitutions:
+1. **VRF Name**: 'Client_A'
+2. **Route Distinguisher (rd)**: Derived from the connected PE router's loopback address (10.0.4.1) and its AS number (65000).
+3. **Route Target**: Assumed as `65000:1` for the purpose of this configuration (standard practice, placeholder).
+4. **Interface of PE**: 'GigabitEthernet0/1' taken from the connected CE interface's IP (10.0.4.2).
+5. **PE AS Number**: '65000' (from PE-1).
+6. **CE Neighbour IP**: '10.0.4.2' (as mentioned in the records).
+7. **CE AS Number**: '65002' (from CE-A1).
+
+For other CE connections (like CE-A3 with PE-2), you would generate similar configurations with their respective details. However, based on the query, I provided a single connection example.
+
+If further configurations are needed for additional CE connections, please specify!
