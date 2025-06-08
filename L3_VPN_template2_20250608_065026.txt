@@ -1,0 +1,51 @@
+Based on the provided sample configuration schema and the details from the user query, I will generate a configuration file for the L3 VPN service with the specified VRF name "Client_A". 
+
+From the variable values JSON, we can extract necessary details for the configuration:
+
+- **PE Router Details**:
+  - Hostname: PE-1
+  - Router ID: 10.10.10.4
+  - AS Number (derived from router_id): Assuming the AS Number based on common practices (e.g., 65001).
+
+- **CE Router Details**:
+  - Hostname: CE-A1
+  - CE Interface IP: 10.0.4.1
+  - Connected PE Interface IP: 10.0.4.2
+  - CE AS Number: Assuming this to be 65002.
+
+Now, I will fill in the values in the provided configuration template:
+
+```plaintext
+vrf definition Client_A
+    rd 10.0.4.1:65001
+    route-target export 65001:1
+    route-target import 65001:1
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1
+    vrf forwarding Client_A
+!
+router bgp 65001
+    address-family ipv4 vrf Client_A
+        neighbour 10.0.4.1 remote-as 65002
+        neighbour 10.0.4.1 activate
+    exit-address-family
+end
+```
+
+### Explanation:
+- **VRF Definition**: 
+  - The VRF name is set to "Client_A".
+  - Route Distinguisher (RD) combines the CE router IP and PE router's assumed AS number.
+  - Route targets are set as an example with a typical format, using 1 as the value to distinguish.
+
+- **Interface Configuration**: 
+  - The interface name is specified as `GigabitEthernet0/1`, which connects to CE-A1 based on the provided records.
+
+- **BGP Configuration**:
+  - The BGP process is configured for the assumed AS number 65001 with the IPv4 address family specific for the "Client_A" VRF.
+  - The neighbor IP is set to the CE interface IP address with the respective remote AS number.
+
+This configuration can be used to push into the NSO system.
