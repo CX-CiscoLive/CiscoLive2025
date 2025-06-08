@@ -1,0 +1,31 @@
+Based on the provided sample configuration schema and the variable values from your query, I will generate a final configuration file for the Layer 3 VPN service with VRF name as 'Client_A'.
+
+Here's the generated configuration:
+
+```
+vrf definition Client_A
+    rd 10.0.4.1:65001
+    route-target export 65001:100
+    route-target import 65001:100
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1
+    vrf forwarding Client_A 
+!
+router bgp 65001
+    address-family ipv4 vrf Client_A 
+        neighbour 10.0.4.2 remote-as 65002
+        neighbour 10.0.4.2 activate  
+    exit-address-family 
+end
+```
+
+### Explanation of the Configuration:
+1. **VRF Definition**: The VRF is named `Client_A`. The route-distinguisher (rd) is formulated using `10.0.4.1` (the loopback of PE) and `65001` (the AS number of PE). Route-targets are set to export and import values.
+2. **Address Family**: The address-family for IPv4 configuration is specified and closed appropriately.
+3. **Interface Configuration**: The interface `GigabitEthernet0/1` connects to the CE and is set to use the VRF `Client_A`.
+4. **BGP Configuration**: The router BGP process for AS `65001` is defined. It includes a BGP neighbor `10.0.4.2` (the address of the CE interface) with its respective remote AS `65002`.
+
+Please ensure you adjust the AS numbers and RT values as per your network policy or architecture if needed.
