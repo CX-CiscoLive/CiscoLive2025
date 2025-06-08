@@ -1,0 +1,38 @@
+Based on the provided sample configuration and the values extracted from the user query, here is the generated configuration file for the L3 VPN service with the specified VRF name 'Client_A':
+
+```
+vrf definition Client_A
+    rd 10.0.4.1:65001
+    route-target export 65001:100
+    route-target import 65001:100
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1
+    vrf forwarding Client_A
+!
+router bgp 65001
+    address-family ipv4 vrf Client_A
+        neighbour 10.0.4.2 remote-as 65002
+        neighbour 10.0.4.2 activate
+    exit-address-family
+end
+```
+
+### Breakdown of the Configuration:
+1. **VRF Definition**:
+   - `VRF Name`: `Client_A`
+   - `loopback of pe`: `10.0.4.1` (from `router_id` of PE-1)
+   - `as_number of pe`: `65001` (assumed typical local AS)
+   - `route_target`: Assuming standard route-targets `65001:100` for both export and import.
+
+2. **Interface Configuration**:
+   - `interface of pe`: `GigabitEthernet0/1` (connected to CE-A1)
+
+3. **BGP Configuration**:
+   - `as_number of pe`: `65001`
+   - `neighbour_ip of ce interface`: `10.0.4.2` (from the IP address of the connected CE interface)
+   - `as_number of ce`: `65002` (assumed typical remote AS for the CE)
+
+Note: The Autonomous System numbers and route-targets are assumed based on standard practices, as they were not provided in the user query. Please make adjustments based on specific deployment requirements or existing network configurations.
