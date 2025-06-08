@@ -1,0 +1,50 @@
+vrf definition Client_A
+    rd 10.10.10.4:65000
+    route-target export 65000:1
+    route-target import 65000:1
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1
+    vrf forwarding Client_A 
+!
+router bgp 65000 
+    address-family ipv4 vrf Client_A 
+        neighbour 10.0.4.1 remote-as 65002
+        neighbour 10.0.4.1 activate  
+    exit-address-family 
+end 
+
+vrf definition Client_A
+    rd 10.10.10.6:65000
+    route-target export 65000:2
+    route-target import 65000:2
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/3
+    vrf forwarding Client_A 
+!
+router bgp 65000 
+    address-family ipv4 vrf Client_A 
+        neighbour 10.0.6.1 remote-as 65004
+        neighbour 10.0.6.1 activate  
+    exit-address-family 
+end 
+
+### Explanation of the Configuration:
+
+1. **VRF Definition for Client_A:**
+   - The configuration includes the definition of a VRF named `Client_A`. 
+   - `rd` (Route Distinguisher) is set to the PE router's loopback address and AS number.
+   - `route-targets` for export and import are defined for proper VPN routing.
+
+2. **Interfaces Configuration:**
+   - The interfaces connected to the CE routers (`GigabitEthernet0/1` for `PE-1` and `GigabitEthernet0/3` for `PE-2`) are configured to use the VRF `Client_A`.
+
+3. **BGP Configuration:**
+   - Each BGP configuration for the PE routers includes an `address-family ipv4 vrf` directive for the VRF `Client_A`, specifying the CE routers as neighbors and their corresponding AS numbers.
+
+Please modify the route-targets and any other parameters based on your specific routing requirements or network policies if needed.
