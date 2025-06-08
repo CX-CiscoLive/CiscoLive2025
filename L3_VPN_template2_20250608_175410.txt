@@ -1,0 +1,58 @@
+Based on your inputs and the provided sample configuration schema for L3 VPNs, here’s the generated configuration file for creating the L3 VPN service with the specified parameters. The configuration will be created for two PE routers identified in the records: PE-1 and PE-2, along with their corresponding CE devices (CE-A1 and CE-A3).
+
+Here’s the generated configuration:
+
+```plaintext
+vrf definition Client_A
+    rd 10.0.4.2:65002
+    route-target export 65000:100
+    route-target import 65000:100
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1
+    vrf forwarding Client_A
+!
+router bgp 65000
+    address-family ipv4 vrf Client_A
+        neighbour 10.0.4.1 remote-as 65002
+        neighbour 10.0.4.1 activate  
+    exit-address-family 
+end
+
+vrf definition Client_A
+    rd 10.0.6.2:65004
+    route-target export 65000:200
+    route-target import 65000:200
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/3
+    vrf forwarding Client_A
+!
+router bgp 65000
+    address-family ipv4 vrf Client_A
+        neighbour 10.0.6.1 remote-as 65004
+        neighbour 10.0.6.1 activate  
+    exit-address-family 
+end
+```
+
+### Explanation:
+1. **VRF Definition**:
+   - For both PE-1 and PE-2, a VRF named 'Client_A' is defined.
+   - Route Distinguisher (RD) is set based on the connected CE IP addresses and their AS numbers (65002 for CE-A1 and 65004 for CE-A3).
+   - Route targets are defined; I've chosen `65000:100` for CE-A1 and `65000:200` for CE-A3 for export/import — you can adjust these values as necessary.
+
+2. **Address Family**:
+   - The address-family configuration is currently defined for IPv4.
+
+3. **Interface Configuration**:
+   - Each PE router's connected interface to the CE is specified to forward using the defined VRF.
+
+4. **BGP Configuration**:
+   - BGP is configured for AS 65000, with neighbor statements for the corresponding CE routers.
+
+Feel free to adjust any specific route targets or any other details as per your network design requirements.
