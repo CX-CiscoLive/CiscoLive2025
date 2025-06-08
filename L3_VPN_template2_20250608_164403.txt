@@ -1,0 +1,54 @@
+Based on the provided user query and variable data, I will generate the necessary configuration files for the L3 VPN service with the VRF name 'Client_A'. Here’s the final configuration based on the sample configuration schema you've given.
+
+### Configuration File for L3 VPN service
+
+```plaintext
+vrf definition Client_A
+    rd 10.0.4.1:65001
+    route-target export 65001:100
+    route-target import 65001:100
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1
+    vrf forwarding Client_A 
+!
+router bgp 65001 
+    address-family ipv4 vrf Client_A 
+        neighbour 10.0.4.2 remote-as 65002
+        neighbour 10.0.4.2 activate  
+    exit-address-family 
+end
+
+vrf definition Client_A
+    rd 10.0.6.1:65003
+    route-target export 65003:200
+    route-target import 65003:200
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/3
+    vrf forwarding Client_A 
+!
+router bgp 65003 
+    address-family ipv4 vrf Client_A 
+        neighbour 10.0.6.2 remote-as 65004
+        neighbour 10.0.6.2 activate  
+    exit-address-family 
+end
+```
+
+### Explanation of the Configuration
+1. **VRF Definitions**:
+    - Two VRF definitions are created for the clients (here, `Client_A`).
+    - Each VRF has its own Route Distinguisher (RD) and route targets for import and export. The RD combines the loopback IP of the PE router and the AS number appropriately.
+
+2. **Interfaces**:
+    - For both PE routers, the interfaces connecting to the CE routers are specified under the corresponding VRF.
+
+3. **BGP Configuration**:
+    - Each PE router is configured with BGP for the specific VRF, mentioning their respective neighbors (the IPs of the CE routers) and the appropriate remote AS numbers.
+
+This configuration is structured to support the VPN service requirements for the specified client (Client_A) and should be compatible with an NSO environment. Please ensure that the AS numbers and route-targets used are accurate for your network's design before implementation.
