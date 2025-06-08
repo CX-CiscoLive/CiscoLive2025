@@ -1,0 +1,68 @@
+To generate the final configuration file for the L3 VPN with the specified parameters, we'll utilize the provided schema and incorporate the variable values. The key information from the user query and the variable data includes:
+
+- VRF Name: `Client_A`
+- PE Routers:
+  - PE-1 with AS number: `65000`, loopback: `10.10.10.4`
+  - PE-2 with AS number: `65000`, loopback: `10.10.10.6`
+- The connected CE's AS number and the necessary configurations would typically be derived here; however, since the CE details weren’t provided, we’ll use hypothetical values for the neighbour.
+
+Let's assume the following hypothetical details for the CE accessed through the PE interfaces:
+- Neighbour IP on PE-1: `192.168.1.1`
+- Neighbour AS number for CE: `65001`
+- Neighbour IP on PE-2: `192.168.1.2`
+
+Based on the above context, the generated configuration for the L3 VPN would be as follows:
+
+```plaintext
+vrf definition Client_A
+    rd 10.10.10.4:65000
+    route-target export rt:65000:100
+    route-target import rt:65000:200
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/0/0
+    vrf forwarding Client_A 
+!
+router bgp 65000 
+    address-family ipv4 vrf Client_A 
+        neighbour 192.168.1.1 remote-as 65001
+        neighbour 192.168.1.1 activate  
+    exit-address-family 
+end
+
+vrf definition Client_A
+    rd 10.10.10.6:65000
+    route-target export rt:65000:100
+    route-target import rt:65000:200
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/0/1
+    vrf forwarding Client_A 
+!
+router bgp 65000 
+    address-family ipv4 vrf Client_A 
+        neighbour 192.168.1.2 remote-as 65001
+        neighbour 192.168.1.2 activate  
+    exit-address-family 
+end
+```
+
+### Explanation:
+1. **VRF Definition**:
+   - The `vrf definition` is set up for `Client_A` with the associated route distinguisher (RD) from the loopback address of each PE and its AS number.
+   - Route targets for export and import are given hypothetical values for demonstration.
+
+2. **Address Family**:
+   - The address family for IPv4 is specified.
+
+3. **Interfaces**:
+   - Example interfaces `GigabitEthernet0/0/0` and `GigabitEthernet0/0/1` are used, which you may need to replace with actual interfaces in use.
+
+4. **BGP Configuration**:
+   - Each PE router has a BGP configuration specifying the neighbor relationship with the respective CE router.
+
+Please ensure you modify the interfaces, neighbor IPs, and any other specific details according to your actual setup as necessary.
