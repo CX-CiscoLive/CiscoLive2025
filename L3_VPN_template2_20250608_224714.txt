@@ -1,0 +1,117 @@
+Based on the provided user input and variable values, I've generated the L3 VPN configuration for the PE routers and the corresponding NSO XML template. Here’s how the configuration looks:
+
+### Generated Configuration for PE Routers
+
+#### For PE-1
+```
+# Device: PE-1
+vrf definition Client_A
+    rd 10.10.10.4:65000
+    route-target export 65000:100
+    route-target import 65000:100
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1
+    vrf forwarding Client_A 
+!
+router bgp 65000 
+    address-family ipv4 vrf Client_A 
+        neighbour 10.0.4.1 remote-as 65002
+        neighbour 10.0.4.1 activate  
+    exit-address-family 
+end
+```
+
+#### For PE-2
+```
+# Device: PE-2
+vrf definition Client_A
+    rd 10.10.10.6:65000
+    route-target export 65000:200
+    route-target import 65000:200
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/3
+    vrf forwarding Client_A 
+!
+router bgp 65000 
+    address-family ipv4 vrf Client_A 
+        neighbour 10.0.6.1 remote-as 65004
+        neighbour 10.0.6.1 activate  
+    exit-address-family 
+end
+```
+
+### NSO XML Template
+
+#### For PE-1
+```xml
+<config>
+    <router>
+        <hostname>PE-1</hostname>
+        <vrf>
+            <name>Client_A</name>
+            <rd>10.10.10.4:65000</rd>
+            <route-target>
+                <export>65000:100</export>
+                <import>65000:100</import>
+            </route-target>
+        </vrf>
+        <interface>
+            <name>GigabitEthernet0/1</name>
+            <vrf-forwarding>Client_A</vrf-forwarding>
+        </interface>
+        <bgp>
+            <asn>65000</asn>
+            <address-family>
+                <name>ipv4</name>
+                <vrf>Client_A</vrf>
+                <neighbor>
+                    <ip>10.0.4.1</ip>
+                    <remote-as>65002</remote-as>
+                    <activate>true</activate>
+                </neighbor>
+            </address-family>
+        </bgp>
+    </router>
+</config>
+```
+
+#### For PE-2
+```xml
+<config>
+    <router>
+        <hostname>PE-2</hostname>
+        <vrf>
+            <name>Client_A</name>
+            <rd>10.10.10.6:65000</rd>
+            <route-target>
+                <export>65000:200</export>
+                <import>65000:200</import>
+            </route-target>
+        </vrf>
+        <interface>
+            <name>GigabitEthernet0/3</name>
+            <vrf-forwarding>Client_A</vrf-forwarding>
+        </interface>
+        <bgp>
+            <asn>65000</asn>
+            <address-family>
+                <name>ipv4</name>
+                <vrf>Client_A</vrf>
+                <neighbor>
+                    <ip>10.0.6.1</ip>
+                    <remote-as>65004</remote-as>
+                    <activate>true</activate>
+                </neighbor>
+            </address-family>
+        </bgp>
+    </router>
+</config>
+```
+
+This configuration includes VRF definition, interface assignments, and BGP neighbor configurations for both PE routers involved in the L3 VPN setup for 'Client_A'. Adjustments can be made if there are any specific details that need to be incorporated or modified!
