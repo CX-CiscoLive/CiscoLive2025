@@ -1,0 +1,36 @@
+Based on the provided sample configuration, user query, and variable values, here is the final configuration file tailored for the L3 VPN with the VRF name "Client_A" on PE routers:
+
+```plaintext
+vrf definition Client_A
+    rd <loopback_of_pe>:<as_number_of_pe>
+    route-target export <route_target>
+    route-target import <route_target>
+!
+address-family ipv4
+exit-address-family
+
+interface <interface_of_pe>
+    vrf forwarding Client_A 
+!
+router bgp <as_number_of_pe> 
+    address-family ipv4 vrf Client_A 
+        neighbour <neighbour_ip_of_ce_interface> remote-as <as_number_of_ce>
+        neighbour <neighbour_ip_of_ce_interface> activate  
+    exit-address-family 
+end
+```
+
+### Notes for Configuration
+1. **Replace Placeholders**: You will need to replace the placeholders:
+   - `<loopback_of_pe>`: with the actual loopback address of the PE router.
+   - `<as_number_of_pe>`: with the actual AS number of the PE router.
+   - `<route_target>`: with the desired route target for both export and import (can be the same or different based on your requirement).
+   - `<interface_of_pe>`: with the interface name on the PE router that is associated with the VRF "Client_A".
+   - `<neighbour_ip_of_ce_interface>`: with the IP address of the CE interface that connects to the PE.
+   - `<as_number_of_ce>`: with the AS number of the CE router.
+
+2. **Ensure Connectivity**: Validate that the interfaces and BGP configuration are correctly set to ensure proper communication between the CE and PE routers.
+
+3. **Verification**: After applying the configuration, run the necessary verification commands to ensure that BGP and the VRF are operational. This may include checking the BGP neighbor status, route tables, and interface statuses.
+
+This configuration should be pushed to the NSO (Network Services Orchestrator) for deployment.
