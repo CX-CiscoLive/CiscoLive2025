@@ -1,0 +1,56 @@
+To generate the NSO configuration for the specified L3 VPN service with the provided variable values, we will extract the relevant data for the two PE routers (PE-1 and PE-2) and their respective connected CE routers (CE-A1 and CE-A3).
+
+Based on the provided information, the configuration will specify the VRF definition, BGP setup for each PE router, and the associated interfaces. Here's the completed configuration file based on the sample configuration structure provided:
+
+```plaintext
+vrf definition Client_A
+    rd 10.10.10.4:65001
+    route-target export 65001:100
+    route-target import 65001:100
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1
+    vrf forwarding Client_A 
+!
+router bgp 65001 
+    address-family ipv4 vrf Client_A 
+        neighbour 10.0.4.1 remote-as 65000
+        neighbour 10.0.4.1 activate  
+    exit-address-family 
+end
+
+vrf definition Client_A
+    rd 10.10.10.6:65002
+    route-target export 65002:100
+    route-target import 65002:100
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/3
+    vrf forwarding Client_A 
+!
+router bgp 65002 
+    address-family ipv4 vrf Client_A 
+        neighbour 10.0.6.1 remote-as 65000
+        neighbour 10.0.6.1 activate  
+    exit-address-family 
+end
+```
+
+### Explanation of Configuration Elements:
+1. **VRF Definition**:
+   - A VRF named "Client_A" is defined for both PE routers (PE-1 and PE-2).
+   - The route-distinguisher (RD) is based on the router's IP and assigned AS number (65001 for PE-1 and 65002 for PE-2).
+   - Route-targets for export and import are set to allow route import/export between VRFs.
+
+2. **Interface Configuration**:
+   - Each PE device has an interface assigned to the VRF. (GigabitEthernet0/1 for PE-1, and GigabitEthernet0/3 for PE-2).
+
+3. **BGP Configuration**:
+   - Each PE router has BGP set up to communicate with the corresponding CE router.
+   - Neighbors are specified using the CE router's IP addresses (10.0.4.1 for PE-1 and 10.0.6.1 for PE-2), with the remote AS set to 65000.
+
+This configuration is tailored for each PE router's VRF and any specific parameters mentioned in the user query. Adjustments might be needed for actual AS numbers and route-targets based on your network requirements.
