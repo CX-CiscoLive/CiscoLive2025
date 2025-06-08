@@ -1,0 +1,32 @@
+Based on the provided configurations and values, here is the final configuration file for the NSO to configure an L3 VPN service with the specified parameters:
+
+```
+! Device Name: PE-1
+vrf definition Client_A
+    rd 10.10.10.4:100
+    route-target export 100:1
+    route-target import 100:1
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1
+    vrf forwarding Client_A 
+!
+router bgp 100
+    address-family ipv4 vrf Client_A
+        neighbour 10.0.4.1 remote-as 200
+        neighbour 10.0.4.1 activate  
+    exit-address-family 
+end
+```
+
+### Explanation:
+
+- The configuration is tailored to the VRF name 'Client_A'.
+- The `rd` (route distinguisher) has been assumed to use the loopback of PE (10.10.10.4) along with an AS number (100) since this was not explicitly provided in the input. Modify this as necessary based on your setup.
+- `route-target` values have been set up for exports and imports, assuming they are the same for this example (100:1). Adjust as needed for your network's design.
+- The interface specified is `GigabitEthernet0/1`, which is available from the connection to `CE-A1`.
+- The BGP configuration uses the AS number (100) for PE, indicating a remote AS number (200) for the connection to `CE-A1` (based on the information provided). Adjust as required.
+
+Make any modifications to the placeholders based on your actual setup or requirements.
