@@ -1,0 +1,41 @@
+Based on the provided configuration schema and the user query, we need to generate a configuration for the L3 VPN service with a VRF name of 'Client_A'. Let's extract the required values from the data structure and fill in the parameters in the sample configuration template.
+
+### Extracted Values
+- **VRF Name**: Client_A
+- **Loopback of PE**: 10.10.10.4 (router_id of PE-1)
+- **AS Number of PE**: Specify an example AS number; we will use `65001` for our example.
+- **Route Target**: Specify an example route target; we will use `65001:100` for our example.
+- **Interface of PE**: GigabitEthernet0/1 (the connected interface on PE-1)
+- **Neighbour IP of CE Interface**: 10.0.4.1 (IP address of CE-A1)
+- **AS Number of CE**: Specify an example AS number; we will use `65002` for our example.
+
+### Final Configuration
+Here's the generated L3 VPN configuration based on the extracted values:
+
+```
+vrf definition Client_A
+    rd 10.10.10.4:65001
+    route-target export 65001:100
+    route-target import 65001:100
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1
+    vrf forwarding Client_A 
+!
+router bgp 65001 
+    address-family ipv4 vrf Client_A 
+        neighbour 10.0.4.1 remote-as 65002
+        neighbour 10.0.4.1 activate  
+    exit-address-family 
+end 
+```
+
+### Explanation
+- The **vrf** block defines the VRF with the name `Client_A`.
+- We set the **route-distinguisher (rd)** and **route-target** both to `65001:100` for simplicity, but these values can be adjusted based on the specific architecture needs.
+- The **interface** section links the physical interface of the PE router that forwards traffic for `Client_A`.
+- The **router bgp** section configures BGP for the defined VRF. The neighbour IP refers to the CE router (`CE-A1`), with `remote-as` reflecting the AS number of the CE router.
+
+Feel free to adjust the AS numbers and route targets to match your network setup and standards.
