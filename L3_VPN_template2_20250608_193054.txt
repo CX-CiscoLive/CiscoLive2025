@@ -1,0 +1,48 @@
+Based on the sample L3 VPN configuration schema provided and the user query along with the variable values, we will create a configuration for VRF named 'Client_A' on the PE routers. Below is the generated configuration:
+
+```plaintext
+vrf definition Client_A
+    rd 10.10.10.4:65000
+    route-target export 65000:100
+    route-target import 65000:100
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1
+    vrf forwarding Client_A 
+!
+router bgp 65000 
+    address-family ipv4 vrf Client_A 
+        neighbour 10.0.4.2 remote-as 65002
+        neighbour 10.0.4.2 activate  
+    exit-address-family 
+end
+
+vrf definition Client_A
+    rd 10.10.10.6:65000
+    route-target export 65000:100
+    route-target import 65000:100
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/3
+    vrf forwarding Client_A 
+!
+router bgp 65000 
+    address-family ipv4 vrf Client_A 
+        neighbour 10.0.6.2 remote-as 65004
+        neighbour 10.0.6.2 activate  
+    exit-address-family 
+end
+```
+
+### Explanation:
+1. **VRF Definition**: For each PE router (PE-1 and PE-2), a VRF named 'Client_A' was defined with a route-distinguisher (RD) and route-targets. Here, an arbitrary route-target (`65000:100`) is used; this can be adjusted per your specific routing policies.
+  
+2. **Interface Configuration**: The interfaces on the PE routers connected to the corresponding CE routers were specified to use the 'Client_A' VRF.
+
+3. **BGP Configuration**: For each PE router (PE-1 and PE-2), a BGP configuration was added that includes the necessary IPv4 address-family configuration to establish internal BGP (iBGP) peering with their respective CE routers.
+
+Make sure to adjust the values of the RD and route-targets as per your specific needs.
