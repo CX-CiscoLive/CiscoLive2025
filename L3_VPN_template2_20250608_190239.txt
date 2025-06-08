@@ -1,0 +1,38 @@
+Based on the provided sample configuration schema and the values from the user query, here is the final configuration file to push into NSO for configuring an L3 VPN with the VRF name as 'Client_A' on the PE routers identified (PE-1 and PE-2) with the given details.
+
+### Final Configuration File:
+```plaintext
+vrf definition Client_A
+    rd 10.10.10.4:65000        # Loopback of PE-1 and AS number
+    route-target export 65000:100  # Assuming route target as 65000:100 for export
+    route-target import 65000:100  # Assuming route target as 65000:100 for import
+!
+vrf definition Client_A
+    rd 10.10.10.6:65000        # Loopback of PE-2 and AS number
+    route-target export 65000:200  # Assuming route target as 65000:200 for export
+    route-target import 65000:200  # Assuming route target as 65000:200 for import
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/0/0  # Assuming interface for both PE routers, can be modified based on actual configuration
+    vrf forwarding Client_A 
+!
+router bgp 65000 
+    address-family ipv4 vrf  Client_A 
+        neighbour 192.168.1.1 remote-as 65001       # Assuming neighbour IP for CE connected to PE-1
+        neighbour 192.168.1.1 activate  
+        neighbour 192.168.1.2 remote-as 65001       # Assuming neighbour IP for CE connected to PE-2
+        neighbour 192.168.1.2 activate  
+    exit-address-family 
+end
+```
+
+### Notes:
+1. The **route-target export/import** values are assumed for demonstration purposes and should be adjusted according to the network design.
+2. The **neighbour IP addresses** need to be replaced with the actual IP addresses of the CE routers connected to PE-1 and PE-2.
+3. The **interface name** (e.g., `GigabitEthernet0/0/0`) is assumed; it should match the actual interface configuration on your devices.
+4. The configuration contains entries for both PE routers (`PE-1` and `PE-2`) as per the user query specifications.
+5. Ensure to validate and customize any specific syntax according to the operating system and version running on your routers (Cisco IOS-XR in this case).
+
+Feel free to modify any placeholders with actual values based on the network setup before deployment.
