@@ -1,0 +1,56 @@
+Based on the provided user query and the variables from the JSON format, here is the final configuration file to push into NSO for the L3 VPN service with VRF name as 'Client_A':
+
+```
+vrf definition Client_A
+    rd 10.10.10.4:65000
+    route-target export 65000:1
+    route-target import 65000:1
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1
+    vrf forwarding Client_A 
+!
+router bgp 65000
+    address-family ipv4 vrf Client_A 
+        neighbour 10.0.4.1 remote-as 65001
+        neighbour 10.0.4.1 activate  
+    exit-address-family 
+end 
+
+vrf definition Client_A
+    rd 10.10.10.6:65000
+    route-target export 65000:2
+    route-target import 65000:2
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/3
+    vrf forwarding Client_A 
+!
+router bgp 65000
+    address-family ipv4 vrf Client_A 
+        neighbour 10.0.6.1 remote-as 65002
+        neighbour 10.0.6.1 activate  
+    exit-address-family 
+end
+```
+
+### Configuration Breakdown:
+1. **VRF Definitions**: 
+   - Defined a VRF named `Client_A` for both PE routers (`PE-1` and `PE-2`). 
+   - For `PE-1`, the RD is defined using its router ID `10.10.10.4` and a sample AS number `65000`, and for `PE-2`, `10.10.10.6` is used similarly with `65000`.
+   - Route targets are added for each PE router.
+
+2. **Interface Configuration**:
+   - For `PE-1`, the interface `GigabitEthernet0/1` is configured to use the `Client_A` VRF.
+   - For `PE-2`, the interface `GigabitEthernet0/3` has similar configuration.
+
+3. **BGP Configuration**:
+   - BGP is configured for both PE routers to advertise the VRF to the connected CE routers with the appropriate neighbour configurations.
+
+### Note:
+- The AS numbers (65000, 65001, 65002) are provided as examples and should be adjusted according to your specific network environment.
+- This configuration may need additional customization based on real route targets and RD used in your network design.
