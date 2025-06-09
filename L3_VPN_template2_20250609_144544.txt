@@ -1,0 +1,148 @@
+Based on your request, I will generate a configuration file for L3VPN services for each PE device connected to the CE devices with the specified parameters. Following this, I will also create the corresponding NSO XML template. Since the provided sample configuration doesn't match the user query requirements, I will create a new template.
+
+### Final Configuration File
+
+#### For PE-1
+```
+device: PE-1
+vrf definition VRF-A
+    rd 10.0.4.1:65002
+    route-target export 65000:100
+    route-target import 65000:100
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1
+    vrf forwarding VRF-A 
+!
+router bgp 65000 
+    address-family ipv4 vrf VRF-A 
+        neighbour 10.0.4.1 remote-as 65002
+        neighbour 10.0.4.1 activate  
+    exit-address-family 
+end
+```
+
+#### For PE-2
+```
+device: PE-2
+vrf definition VRF-A
+    rd 10.0.6.1:65004
+    route-target export 65000:200
+    route-target import 65000:200
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/3
+    vrf forwarding VRF-A 
+!
+router bgp 65000 
+    address-family ipv4 vrf VRF-A 
+        neighbour 10.0.6.1 remote-as 65004
+        neighbour 10.0.6.1 activate  
+    exit-address-family 
+end
+```
+
+### NSO XML Configuration Template
+
+#### For PE-1
+```xml
+<devices xmlns="http://tail-f.com/ns/ncs">
+  <device>
+    <name>PE-1</name>
+    <config>
+      <vrf xmlns="urn:ios">
+        <definition>
+          <name>VRF-A</name>
+          <rd>10.0.4.1:65002</rd>
+          <route-target>
+            <export>
+              <asn-ip>65000:100</asn-ip>
+            </export>
+            <import>
+              <asn-ip>65000:100</asn-ip>
+            </import>
+          </route-target>
+        </definition>
+      </vrf>
+      <interface xmlns="urn:ios">
+        <GigabitEthernet>
+          <name>0/1</name>
+          <vrf>
+            <forwarding>VRF-A</forwarding>
+          </vrf>
+        </GigabitEthernet>
+      </interface>
+      <router xmlns="urn:ios">
+        <bgp>
+          <as-no>65000</as-no>
+          <address-family>
+            <with-vrf>
+              <ipv4>
+                <af>unicast</af>
+                <vrf>
+                  <name>VRF-A</name>
+                </vrf>
+              </ipv4>
+            </with-vrf>
+          </address-family>
+        </bgp>
+      </router>
+    </config>
+  </device>
+</devices>
+```
+
+#### For PE-2
+```xml
+<devices xmlns="http://tail-f.com/ns/ncs">
+  <device>
+    <name>PE-2</name>
+    <config>
+      <vrf xmlns="urn:ios">
+        <definition>
+          <name>VRF-A</name>
+          <rd>10.0.6.1:65004</rd>
+          <route-target>
+            <export>
+              <asn-ip>65000:200</asn-ip>
+            </export>
+            <import>
+              <asn-ip>65000:200</asn-ip>
+            </import>
+          </route-target>
+        </definition>
+      </vrf>
+      <interface xmlns="urn:ios">
+        <GigabitEthernet>
+          <name>0/3</name>
+          <vrf>
+            <forwarding>VRF-A</forwarding>
+          </vrf>
+        </GigabitEthernet>
+      </interface>
+      <router xmlns="urn:ios">
+        <bgp>
+          <as-no>65000</as-no>
+          <address-family>
+            <with-vrf>
+              <ipv4>
+                <af>unicast</af>
+                <vrf>
+                  <name>VRF-A</name>
+                </vrf>
+              </ipv4>
+            </with-vrf>
+          </address-family>
+        </bgp>
+      </router>
+    </config>
+  </device>
+</devices>
+```
+
+### Summary
+This configuration now includes L3VPN services for both PE devices connected to CE devices for VRF-A, with the relevant interface and BGP details configured for each router. Each section is clearly defined for ease of interpretation and implementation.
