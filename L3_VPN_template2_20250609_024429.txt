@@ -1,0 +1,63 @@
+Sure! Below is the generated configuration file for the NSO L3 VPN setup based on the provided user query and variable values. Each device's configuration is separated by the `<per-device-config>` tag for easy parsing. 
+
+```xml
+<network_configuration>
+    <per-device-config>
+        <device>
+            <hostname>PE-1</hostname>
+            <configuration>
+                vrf definition Client_A
+                    rd 10.10.10.4:65000
+                    route-target export 65000:100
+                    route-target import 65000:100
+                !
+                address-family ipv4
+                exit-address-family
+
+                interface GigabitEthernet0/1
+                    vrf forwarding Client_A 
+                !
+                router bgp 65000 
+                    address-family ipv4 vrf Client_A 
+                        neighbour 10.0.4.1 remote-as 65002
+                        neighbour 10.0.4.1 activate  
+                    exit-address-family 
+                end 
+            </configuration>
+        </device>
+    </per-device-config>
+
+    <per-device-config>
+        <device>
+            <hostname>PE-2</hostname>
+            <configuration>
+                vrf definition Client_A
+                    rd 10.10.10.6:65000
+                    route-target export 65000:200
+                    route-target import 65000:200
+                !
+                address-family ipv4
+                exit-address-family
+
+                interface GigabitEthernet0/3
+                    vrf forwarding Client_A 
+                !
+                router bgp 65000 
+                    address-family ipv4 vrf Client_A 
+                        neighbour 10.0.6.1 remote-as 65004
+                        neighbour 10.0.6.1 activate  
+                    exit-address-family 
+                end 
+            </configuration>
+        </device>
+    </per-device-config>
+</network_configuration>
+```
+
+### Explanation of Configuration Elements:
+- **vrf definition**: Each PE router has a VRF named `Client_A`. The route distinguisher (RD) is formed by combining the router's loopback address and its AS number (e.g., `10.10.10.4:65000` for PE-1).
+- **route-target**: Specifies the import and export route targets. In this example, hypothetical values are used (`65000:100` for PE-1 and `65000:200` for PE-2).
+- **interface configuration**: Each PE interface that connects to the CE router is associated with the `Client_A` VRF.
+- **router bgp configuration**: BGP is configured for the VRF and specifies the neighbor information (IP and remote AS).
+
+This format can be easily parsed for individual device configurations and is structured properly for NSO deployment.
