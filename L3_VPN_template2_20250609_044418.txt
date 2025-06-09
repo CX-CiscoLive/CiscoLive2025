@@ -1,0 +1,142 @@
+Based on the user query, provided variable values, and the sample configurations, here's the generated final configuration for the L3 VPN with the VRF name 'Client_A' for the PE routers, along with the corresponding NSO XML template per device:
+
+### Final Configuration:
+```plaintext
+vrf definition Client_A
+    rd 10.10.10.4:65000
+    route-target export 65000:100
+    route-target import 65000:100
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1
+    vrf forwarding Client_A 
+!
+router bgp 65000 
+    address-family ipv4 vrf Client_A 
+        neighbour 10.0.4.2 remote-as 65002
+        neighbour 10.0.4.2 activate  
+    exit-address-family 
+end
+
+vrf definition Client_A
+    rd 10.10.10.6:65000
+    route-target export 65000:100
+    route-target import 65000:100
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/3
+    vrf forwarding Client_A 
+!
+router bgp 65000 
+    address-family ipv4 vrf Client_A 
+        neighbour 10.0.6.2 remote-as 65004
+        neighbour 10.0.6.2 activate  
+    exit-address-family 
+end
+```
+
+### NSO XML Template:
+```xml
+<devices xmlns="http://tail-f.com/ns/ncs">
+  <device>
+    <name>PE-1</name>
+    <config>
+      <tailfned xmlns="urn:ios">
+        <police>cirmode</police>
+      </tailfned>
+      <vrf xmlns="urn:ios">
+        <definition>
+          <name>Client_A</name>
+          <rd>10.10.10.4:65000</rd>
+          <route-target>
+            <export>
+              <asn-ip>65000:100</asn-ip>
+            </export>
+            <import>
+              <asn-ip>65000:100</asn-ip>
+            </import>
+          </route-target>
+        </definition>
+      </vrf>
+      <interface xmlns="urn:ios">
+        <GigabitEthernet>
+          <name>0/1</name>
+          <vrf>
+            <forwarding>Client_A</forwarding>
+          </vrf>
+        </GigabitEthernet>
+      </interface>
+      <router xmlns="urn:ios">
+        <bgp>
+          <as-no>65000</as-no>
+          <address-family>
+            <with-vrf>
+              <ipv4>
+                <af>unicast</af>
+                <vrf>
+                  <name>Client_A</name>
+                </vrf>
+              </ipv4>
+            </with-vrf>
+          </address-family>
+        </bgp>
+      </router>
+    </config>
+  </device>
+<per-device-config>
+  <device>
+    <name>PE-2</name>
+    <config>
+      <tailfned xmlns="urn:ios">
+        <police>cirmode</police>
+      </tailfned>
+      <vrf xmlns="urn:ios">
+        <definition>
+          <name>Client_A</name>
+          <rd>10.10.10.6:65000</rd>
+          <route-target>
+            <export>
+              <asn-ip>65000:100</asn-ip>
+            </export>
+            <import>
+              <asn-ip>65000:100</asn-ip>
+            </import>
+          </route-target>
+        </definition>
+      </vrf>
+      <interface xmlns="urn:ios">
+        <GigabitEthernet>
+          <name>0/3</name>
+          <vrf>
+            <forwarding>Client_A</forwarding>
+          </vrf>
+        </GigabitEthernet>
+      </interface>
+      <router xmlns="urn:ios">
+        <bgp>
+          <as-no>65000</as-no>
+          <address-family>
+            <with-vrf>
+              <ipv4>
+                <af>unicast</af>
+                <vrf>
+                  <name>Client_A</name>
+                </vrf>
+              </ipv4>
+            </with-vrf>
+          </address-family>
+        </bgp>
+      </router>
+    </config>
+  </device>
+</per-device-config>
+</devices>
+```
+
+### Note:
+- Each `<device>` section within `<per-device-config>` contains configurations corresponding to the individual routers (PE-1 and PE-2).
+- The `rd` and `route-target` parameters have been maintained based on the provided data for both devices, ensuring consistency and compliance with L3 VPN best practices.
