@@ -1,0 +1,126 @@
+Based on the user query and the provided data, here is the generated XML configuration for both PE-1 and PE-2, formatted to separate the configurations by the `<device-specific-configuration>` tag:
+
+```xml
+<devices xmlns="http://tail-f.com/ns/ncs">
+
+    <device>
+        <name>PE-1</name>
+        <config>
+            <tailfned xmlns="urn:ios">
+                <police>cirmode</police>
+            </tailfned>
+            <vrf xmlns="urn:ios">
+                <definition>
+                    <name>Client_A</name>
+                    <rd>10.10.10.4:65000</rd>
+                    <route-target>
+                        <export>
+                            <asn-ip>65000:100</asn-ip>
+                        </export>
+                        <import>
+                            <asn-ip>65000:100</asn-ip>
+                        </import>
+                    </route-target>
+                </definition>
+            </vrf>
+            <interface xmlns="urn:ios">
+                <GigabitEthernet>
+                    <name>0/1</name>
+                    <vrf>
+                        <forwarding>Client_A</forwarding>
+                    </vrf>
+                </GigabitEthernet>
+            </interface>
+            <router xmlns="urn:ios">
+                <bgp>
+                    <as-no>65000</as-no>
+                    <address-family>
+                        <with-vrf>
+                            <ipv4>
+                                <af>unicast</af>
+                                <vrf>
+                                    <name>Client_A</name>
+                                    <neighbor>
+                                        <id>10.0.4.2</id>
+                                        <remote-as>65002</remote-as>
+                                    </neighbor>
+                                </vrf>
+                            </ipv4>
+                        </with-vrf>
+                    </address-family>
+                </bgp>
+            </router>
+        </config>
+    </device>
+
+    <device-specific-configuration/>
+
+    <device>
+        <name>PE-2</name>
+        <config>
+            <tailfned xmlns="urn:ios">
+                <police>cirmode</police>
+            </tailfned>
+            <vrf xmlns="urn:ios">
+                <definition>
+                    <name>Client_A</name>
+                    <rd>10.10.10.6:65000</rd>
+                    <route-target>
+                        <export>
+                            <asn-ip>65000:100</asn-ip>
+                        </export>
+                        <import>
+                            <asn-ip>65000:100</asn-ip>
+                        </import>
+                    </route-target>
+                </definition>
+            </vrf>
+            <interface xmlns="urn:ios">
+                <GigabitEthernet>
+                    <name>0/3</name>
+                    <vrf>
+                        <forwarding>Client_A</forwarding>
+                    </vrf>
+                </GigabitEthernet>
+            </interface>
+            <router xmlns="urn:ios">
+                <bgp>
+                    <as-no>65000</as-no>
+                    <address-family>
+                        <with-vrf>
+                            <ipv4>
+                                <af>unicast</af>
+                                <vrf>
+                                    <name>Client_A</name>
+                                    <neighbor>
+                                        <id>10.0.6.1</id>
+                                        <remote-as>65004</remote-as>
+                                    </neighbor>
+                                </vrf>
+                            </ipv4>
+                        </with-vrf>
+                    </address-family>
+                </bgp>
+            </router>
+        </config>
+    </device>
+</devices>
+```
+
+### Breakdown of Configuration:
+
+1. **PE-1 Configuration**:
+   - **VRF Name**: Client_A
+   - **RD**: 10.10.10.4:65000
+   - **Route Target**: Both import and export set to `65000:100`.
+   - **Interface**: GigabitEthernet0/1 (configured to forward traffic to VRF Client_A).
+   - **BGP Neighbor**: 10.0.4.2 (remote-as 65002).
+
+2. **PE-2 Configuration**:
+   - **VRF Name**: Client_A
+   - **RD**: 10.10.10.6:65000
+   - **Route Target**: Both import and export set to `65000:100`.
+   - **Interface**: GigabitEthernet0/3 (configured to forward traffic to VRF Client_A).
+   - **BGP Neighbor**: 10.0.6.1 (remote-as 65004).
+
+The configurations are properly formatted within separate `<device>` tags with a `<device-specific-configuration>` tag dividing them, as specified in the requirements.
