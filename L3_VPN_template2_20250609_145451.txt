@@ -1,0 +1,69 @@
+Based on the provided user query for configuring a new L2VPN service with VPN ID 500 for all PE devices connected to CE devices, I will generate the appropriate configuration files for each PE device and create the corresponding NSO XML templates.
+
+### Configuration for PE-1
+
+```
+! Device Name: PE-1
+l2vpn
+  vfi vpn500 
+    vpn id 500
+    neighbor 10.0.4.1
+  exit
+!
+```
+
+### NSO XML Template for PE-1
+
+```xml
+<devices xmlns="http://tail-f.com/ns/ncs">
+  <device>
+    <name>PE-1</name>
+    <config>
+      <l2vpn xmlns="urn:ios">
+        <vfi>
+          <name>vpn500</name>
+          <vpn-id>500</vpn-id>
+          <neighbor>10.0.4.1</neighbor>
+        </vfi>
+      </l2vpn>
+    </config>
+  </device>
+</devices>
+```
+
+### Configuration for PE-2
+
+```
+! Device Name: PE-2
+l2vpn
+  vfi vpn500 
+    vpn id 500
+    neighbor 10.0.6.1
+  exit
+!
+```
+
+### NSO XML Template for PE-2
+
+```xml
+<devices xmlns="http://tail-f.com/ns/ncs">
+  <device>
+    <name>PE-2</name>
+    <config>
+      <l2vpn xmlns="urn:ios">
+        <vfi>
+          <name>vpn500</name>
+          <vpn-id>500</vpn-id>
+          <neighbor>10.0.6.1</neighbor>
+        </vfi>
+      </l2vpn>
+    </config>
+  </device>
+</devices>
+```
+
+### Summary of Configuration Files
+- Both PE-1 and PE-2 configurations have been generated to establish L2VPN with a VPN ID of 500, including the necessary neighbor commands pointing to their respective CE devices.
+- Each device also has an associated XML template compatible with NSO for configuration deployment.
+
+These configurations are designed based on the records of CE devices that establish direct connections to the PE devices. If there are additional PE devices, similar configurations can be created following the provided template format.
