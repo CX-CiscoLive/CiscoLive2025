@@ -1,0 +1,60 @@
+Based on the given user query and the values provided in the JSON format, I will generate the final configuration file for the L3 VPN with the specified VRF name of 'Client_A'. The configuration will be created for two PE routers (PE-1 and PE-2), corresponding to their interfaces connected to CE routers (CE-A1 and CE-A3) along with their respective AS numbers.
+
+Here's the generated configuration:
+
+```plaintext
+! Configuration for L3 VPN with VRF Client_A
+
+vrf definition Client_A
+    rd 10.10.10.4:65000
+    route-target export 65000:1
+    route-target import 65000:1
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1
+    vrf forwarding Client_A 
+!
+router bgp 65000 
+    address-family ipv4 vrf Client_A 
+        neighbour 10.0.4.1 remote-as 65002
+        neighbour 10.0.4.1 activate  
+    exit-address-family 
+end 
+
+! Configuration for L3 VPN with VRF Client_A
+
+vrf definition Client_A
+    rd 10.10.10.6:65000
+    route-target export 65000:2
+    route-target import 65000:2
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/3
+    vrf forwarding Client_A 
+!
+router bgp 65000 
+    address-family ipv4 vrf Client_A 
+        neighbour 10.0.6.1 remote-as 65004
+        neighbour 10.0.6.1 activate  
+    exit-address-family 
+end
+```
+
+### Explanation of the Configuration:
+1. **VRF Definition**: The VRF named 'Client_A' is created for both PE routers.
+   - The route-distinguisher (RD) is defined based on the router ID and AS number.
+   - Route targets are included, typically indicated as `65000:1` and `65000:2`, which can be adjusted based on your addressing plan.
+
+2. **Address Family**: Specified address family for IPv4.
+
+3. **Interface Configuration**: Each interface on the PE routers (GigabitEthernet0/1 on PE-1 and GigabitEthernet0/3 on PE-2) is associated with the VRF.
+
+4. **BGP Configuration**: 
+   - BGP is configured for each PE router, specifying the address-family for the VRF.
+   - Neighbors are configured with their respective CE routers, indicating the remote AS.
+
+This configuration applies the settings based on the provided details and can be pushed into the NSO for deployment. Adjust any route targets or additional parameters as needed for your network requirements.
