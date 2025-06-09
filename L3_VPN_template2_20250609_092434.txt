@@ -1,0 +1,124 @@
+Based on your requirements to generate configuration XML files for both PE-1 and PE-2 routers, I'll create device-specific configuration sections for each router in line with your provided schema.
+
+### Generated Configuration XML for PE-1
+```xml
+<device-specific-configuration>
+<devices xmlns="http://tail-f.com/ns/ncs">
+    <device>
+        <name>PE-1</name>
+        <config>
+            <tailfned xmlns="urn:ios">
+                <police>cirmode</police>
+            </tailfned>
+            <vrf xmlns="urn:ios">
+                <definition>
+                    <name>Client_A</name>
+                    <rd>10.10.10.4:65000</rd>
+                    <route-target>
+                        <export>
+                            <asn-ip>65000:100</asn-ip>
+                        </export>
+                        <import>
+                            <asn-ip>65000:100</asn-ip>
+                        </import>
+                    </route-target>
+                </definition>
+            </vrf>
+            <interface xmlns="urn:ios">
+                <GigabitEthernet>
+                    <name>0/1</name>
+                    <vrf>
+                        <forwarding>Client_A</forwarding>
+                    </vrf>
+                </GigabitEthernet>
+            </interface>
+            <router xmlns="urn:ios">
+                <bgp>
+                    <as-no>65000</as-no>
+                    <address-family>
+                        <with-vrf>
+                            <ipv4>
+                                <af>unicast</af>
+                                <vrf>
+                                    <name>Client_A</name>
+                                    <neighbor>
+                                        <id>10.0.4.1</id>
+                                        <remote-as>65002</remote-as>
+                                    </neighbor>
+                                </vrf>
+                            </ipv4>
+                        </with-vrf>
+                    </address-family>
+                </bgp>
+            </router>
+        </config>
+    </device>
+</devices>
+</device-specific-configuration>
+```
+
+### Generated Configuration XML for PE-2
+```xml
+<device-specific-configuration>
+<devices xmlns="http://tail-f.com/ns/ncs">
+    <device>
+        <name>PE-2</name>
+        <config>
+            <tailfned xmlns="urn:ios">
+                <police>cirmode</police>
+            </tailfned>
+            <vrf xmlns="urn:ios">
+                <definition>
+                    <name>Client_A</name>
+                    <rd>10.10.10.6:65000</rd>
+                    <route-target>
+                        <export>
+                            <asn-ip>65000:100</asn-ip>
+                        </export>
+                        <import>
+                            <asn-ip>65000:100</asn-ip>
+                        </import>
+                    </route-target>
+                </definition>
+            </vrf>
+            <interface xmlns="urn:ios">
+                <GigabitEthernet>
+                    <name>0/3</name>
+                    <vrf>
+                        <forwarding>Client_A</forwarding>
+                    </vrf>
+                </GigabitEthernet>
+            </interface>
+            <router xmlns="urn:ios">
+                <bgp>
+                    <as-no>65000</as-no>
+                    <address-family>
+                        <with-vrf>
+                            <ipv4>
+                                <af>unicast</af>
+                                <vrf>
+                                    <name>Client_A</name>
+                                    <neighbor>
+                                        <id>10.0.6.1</id>
+                                        <remote-as>65004</remote-as>
+                                    </neighbor>
+                                </vrf>
+                            </ipv4>
+                        </with-vrf>
+                    </address-family>
+                </bgp>
+            </router>
+        </config>
+    </device>
+</devices>
+</device-specific-configuration>
+```
+
+### Summary of Details Incorporated:
+- **VRF Definition** for both PE-1 and PE-2 using VRF name `Client_A`.
+- **Route Distinguisher (rd)** as per the corresponding router IDs for each PE.
+- **Route Targets** set for both export and import with ASN-based format.
+- The **Interfaces** configured with corresponding names and linked to the VRF.
+- **BGP Configuration** incorporates the correct AS numbers and neighbor details for each PE.
+
+Feel free to adjust any specific parameters as necessary for your network setup!
