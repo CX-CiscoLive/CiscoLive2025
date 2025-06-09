@@ -1,0 +1,157 @@
+Certainly! Below you'll find the generated configuration files for the PE devices based on the user query, along with the corresponding NSO XML templates.
+
+### Configuration for PE Devices
+
+```plaintext
+device PE-1
+vrf definition VRF_PE1
+    rd 10.10.10.4:65000
+    route-target export 65000:100
+    route-target import 65000:100
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1
+    vrf forwarding VRF_PE1 
+    mtu 9000
+!
+router bgp 65000 
+    address-family ipv4 vrf VRF_PE1 
+        neighbour 10.0.4.1 remote-as 65002
+        neighbour 10.0.4.1 activate  
+    exit-address-family 
+end
+
+device PE-2
+vrf definition VRF_PE2
+    rd 10.10.10.6:65000
+    route-target export 65000:200
+    route-target import 65000:200
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/3
+    vrf forwarding VRF_PE2 
+    mtu 9000
+!
+router bgp 65000 
+    address-family ipv4 vrf VRF_PE2 
+        neighbour 10.0.6.1 remote-as 65004
+        neighbour 10.0.6.1 activate  
+    exit-address-family 
+end
+```
+
+### NSO XML Templates
+
+```xml
+<devices xmlns="http://tail-f.com/ns/ncs">
+  <device>
+    <name>PE-1</name>
+    <config>
+      <tailf xmlns="urn:ios">
+        <vrf xmlns="urn:ios">
+          <definition>
+            <name>VRF_PE1</name>
+            <rd>10.10.10.4:65000</rd>
+            <route-target>
+              <export>
+                <asn-ip>65000:100</asn-ip>
+              </export>
+              <import>
+                <asn-ip>65000:100</asn-ip>
+              </import>
+            </route-target>
+          </definition>
+        </vrf>
+        <interface xmlns="urn:ios">
+          <GigabitEthernet>
+            <name>0/1</name>
+            <vrf>
+              <forwarding>VRF_PE1</forwarding>
+            </vrf>
+            <mtu>9000</mtu>
+          </GigabitEthernet>
+        </interface>
+        <router xmlns="urn:ios">
+          <bgp>
+            <as-no>65000</as-no>
+            <address-family>
+              <with-vrf>
+                <ipv4>
+                  <af>unicast</af>
+                  <vrf>
+                    <name>VRF_PE1</name>
+                  </vrf>
+                </ipv4>
+              </with-vrf>
+              <neighbour>
+                <ip-address>10.0.4.1</ip-address>
+                <remote-as>65002</remote-as>
+                <activate/>
+              </neighbour>
+            </address-family>
+          </bgp>
+        </router>
+      </tailf>
+    </config>
+  </device>
+  <device>
+    <name>PE-2</name>
+    <config>
+      <tailf xmlns="urn:ios">
+        <vrf xmlns="urn:ios">
+          <definition>
+            <name>VRF_PE2</name>
+            <rd>10.10.10.6:65000</rd>
+            <route-target>
+              <export>
+                <asn-ip>65000:200</asn-ip>
+              </export>
+              <import>
+                <asn-ip>65000:200</asn-ip>
+              </import>
+            </route-target>
+          </definition>
+        </vrf>
+        <interface xmlns="urn:ios">
+          <GigabitEthernet>
+            <name>0/3</name>
+            <vrf>
+              <forwarding>VRF_PE2</forwarding>
+            </vrf>
+            <mtu>9000</mtu>
+          </GigabitEthernet>
+        </interface>
+        <router xmlns="urn:ios">
+          <bgp>
+            <as-no>65000</as-no>
+            <address-family>
+              <with-vrf>
+                <ipv4>
+                  <af>unicast</af>
+                  <vrf>
+                    <name>VRF_PE2</name>
+                  </vrf>
+                </ipv4>
+              </with-vrf>
+              <neighbour>
+                <ip-address>10.0.6.1</ip-address>
+                <remote-as>65004</remote-as>
+                <activate/>
+              </neighbour>
+            </address-family>
+          </bgp>
+        </router>
+      </tailf>
+    </config>
+  </device>
+</devices>
+```
+
+### Explanation
+- Each PE device has its configuration generated according to the user requirements and specified parameters for various components including VRF definition, interface configuration, and BGP settings.
+- Corresponding NSO XML templates for each PE device segment the configuration to allow easy ingestion into NSO.
+- The MTU has been set to 9000 for the interfaces connected to the CE devices as per the user's request.
