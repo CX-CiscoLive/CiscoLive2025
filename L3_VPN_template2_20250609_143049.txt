@@ -1,0 +1,93 @@
+Sure! Let's create a new configuration based on an L3VPN setup. 
+
+Assuming the requirements for the new device are as follows: 
+
+- Device name: `ios1`
+- VRF Name: `Client_B`
+- Route Distinguisher (RD): `10.10.20.4:65001`
+- Route Target import/export ASN-IP: `65001:200`
+- BGP AS No: `65001`
+- Interface: `GigabitEthernet0/2` that will use the VRF `Client_B`.
+
+### Final Configuration File for NSO
+
+```
+device: ios1
+vrf:
+  name: Client_B
+  rd: 10.10.20.4:65001
+  route_target:
+    export:
+      asn_ip: 65001:200
+    import:
+      asn_ip: 65001:200
+interface:
+  name: GigabitEthernet0/2
+  vrf:
+    forwarding: Client_B
+router:
+  bgp:
+    as_no: 65001
+    address_family:
+      with_vrf:
+        ipv4:
+          af: unicast
+          vrf:
+            name: Client_B
+```
+
+### NSO XML Template for Device `ios1`
+
+```xml
+<example>
+<devices xmlns="http://tail-f.com/ns/ncs">
+  <device>
+    <name>ios1</name>
+    <config>
+      <tailfned xmlns="urn:ios">
+        <police>cirmode</police>
+      </tailfned>
+      <vrf xmlns="urn:ios">
+        <definition>
+          <name>Client_B</name>
+          <rd>10.10.20.4:65001</rd>
+          <route-target>
+            <export>
+              <asn-ip>65001:200</asn-ip>
+            </export>
+            <import>
+              <asn-ip>65001:200</asn-ip>
+            </import>
+          </route-target>
+        </definition>
+      </vrf>
+      <interface xmlns="urn:ios">
+        <GigabitEthernet>
+          <name>0/2</name>
+          <vrf>
+            <forwarding>Client_B</forwarding>
+          </vrf>
+        </GigabitEthernet>
+      </interface>
+      <router xmlns="urn:ios">
+        <bgp>
+          <as-no>65001</as-no>
+          <address-family>
+            <with-vrf>
+              <ipv4>
+                <af>unicast</af>
+                <vrf>
+                  <name>Client_B</name>
+                </vrf>
+              </ipv4>
+            </with-vrf>
+          </address-family>
+        </bgp>
+      </router>
+    </config>
+  </device>
+</devices>
+</example>
+```
+
+This template can now be used to push configuration to the NSO for the device `ios1` with the specified configurations.
