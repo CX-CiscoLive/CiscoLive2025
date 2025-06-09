@@ -1,0 +1,53 @@
+Based on the provided information, since the user query is to change the MTU of interfaces of PE devices connected to CE devices to 9000, I will create a new configuration schema as requested.
+
+### Configuration for PE Devices
+```
+device name: PE-1
+mtu 9000
+interface GigabitEthernet0/1
+    mtu 9000
+!
+exit
+end
+
+device name: PE-2
+mtu 9000
+interface GigabitEthernet0/3
+    mtu 9000
+!
+exit
+end
+```
+
+### NSO XML Template
+```xml
+<devices xmlns="http://tail-f.com/ns/ncs">
+  <device>
+    <name>PE-1</name>
+    <config>
+      <interface xmlns="urn:ios">
+        <GigabitEthernet>
+          <name>0/1</name>
+          <mtu>9000</mtu>
+        </GigabitEthernet>
+      </interface>
+    </config>
+  </device>
+  <device>
+    <name>PE-2</name>
+    <config>
+      <interface xmlns="urn:ios">
+        <GigabitEthernet>
+          <name>0/3</name>
+          <mtu>9000</mtu>
+        </GigabitEthernet>
+      </interface>
+    </config>
+  </device>
+</devices>
+```
+
+### Explanation
+- For each PE device (PE-1 and PE-2), configured the MTU to be 9000 on the interfaces connected to their respective CE devices.
+- Generated the XML configuration following the provided NSO L3VPN XML template format.
+- Each device configuration now includes a child `<interface>` element with the respective MTU setting for the specific interfaces.
