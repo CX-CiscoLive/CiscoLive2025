@@ -1,0 +1,76 @@
+Based on your request for a new L2VPN service with VPN ID 500 for all PE devices connected to CE devices, here is the generated configuration file and accompanying NSO XML templates for each device.
+
+### Generated Configuration Files
+
+#### For Device PE-1
+```
+! Device Name: PE-1
+l2vpn
+  vpn id 500
+    interface GigabitEthernet0/1
+      peer-address 10.0.4.1
+      encapsulation ethernet
+    !
+  exit
+end
+```
+
+#### For Device PE-2
+```
+! Device Name: PE-2
+l2vpn
+  vpn id 500
+    interface GigabitEthernet0/3
+      peer-address 10.0.6.1
+      encapsulation ethernet
+    !
+  exit
+end
+```
+
+### Corresponding NSO XML Templates
+
+#### NSO XML Template for PE-1
+```xml
+<devices xmlns="http://tail-f.com/ns/ncs">
+  <device>
+    <name>PE-1</name>
+    <config>
+      <l2vpn xmlns="urn:ios">
+        <vpn>
+          <id>500</id>
+          <interface>
+            <name>GigabitEthernet0/1</name>
+            <peer-address>10.0.4.1</peer-address>
+            <encapsulation>ethernet</encapsulation>
+          </interface>
+        </vpn>
+      </l2vpn>
+    </config>
+  </device>
+</devices>
+```
+
+#### NSO XML Template for PE-2
+```xml
+<devices xmlns="http://tail-f.com/ns/ncs">
+  <device>
+    <name>PE-2</name>
+    <config>
+      <l2vpn xmlns="urn:ios">
+        <vpn>
+          <id>500</id>
+          <interface>
+            <name>GigabitEthernet0/3</name>
+            <peer-address>10.0.6.1</peer-address>
+            <encapsulation>ethernet</encapsulation>
+          </interface>
+        </vpn>
+      </l2vpn>
+    </config>
+  </device>
+</devices>
+```
+
+### Summary
+The configuration files are structured for the L2VPN service based on the connection between the CE and corresponding PE devices, with proper encapsulation settings. The corresponding NSO XML templates allow for configuration management in NSO, providing a clear outline of the configuration to be pushed to each device.
