@@ -1,0 +1,161 @@
+Certainly! Below is the generated configuration file based on your input for the two PE devices (PE-1 and PE-2) with their respective configurations, including the MTU settings updated according to your specifications.
+
+### Configuration for PE-1
+```
+device_name PE-1
+vrf definition VRF_A
+    rd 10.10.10.4:65000
+    route-target export 65000:100
+    route-target import 65000:100
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1
+    mtu 9000
+    vrf forwarding VRF_A 
+!
+router bgp 65000 
+    address-family ipv4 vrf VRF_A 
+        neighbour 10.0.4.1 remote-as 65002
+        neighbour 10.0.4.1 activate  
+    exit-address-family 
+end
+```
+
+### Configuration for PE-2
+```
+device_name PE-2
+vrf definition VRF_B
+    rd 10.10.10.6:65000
+    route-target export 65000:200
+    route-target import 65000:200
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/3
+    mtu 9000
+    vrf forwarding VRF_B 
+!
+router bgp 65000 
+    address-family ipv4 vrf VRF_B 
+        neighbour 10.0.6.1 remote-as 65004
+        neighbour 10.0.6.1 activate  
+    exit-address-family 
+end
+```
+
+### NSO XML Template for PE-1
+```xml
+<devices xmlns="http://tail-f.com/ns/ncs">
+  <device>
+    <name>PE-1</name>
+    <config>
+      <vrf xmlns="urn:ios">
+        <definition>
+          <name>VRF_A</name>
+          <rd>10.10.10.4:65000</rd>
+          <route-target>
+            <export>
+              <asn-ip>65000:100</asn-ip>
+            </export>
+            <import>
+              <asn-ip>65000:100</asn-ip>
+            </import>
+          </route-target>
+        </definition>
+      </vrf>
+      <interface xmlns="urn:ios">
+        <GigabitEthernet>
+          <name>0/1</name>
+          <vrf>
+            <forwarding>VRF_A</forwarding>
+          </vrf>
+          <mtu>9000</mtu>
+        </GigabitEthernet>
+      </interface>
+      <router xmlns="urn:ios">
+        <bgp>
+          <as-no>65000</as-no>
+          <address-family>
+            <with-vrf>
+              <ipv4>
+                <af>unicast</af>
+                <vrf>
+                  <name>VRF_A</name>
+                </vrf>
+                <neighbours>
+                  <neighbour>
+                    <ip>10.0.4.1</ip>
+                    <remote-as>65002</remote-as>
+                    <activate/>
+                  </neighbour>
+                </neighbours>
+              </ipv4>
+            </with-vrf>
+          </address-family>
+        </bgp>
+      </router>
+    </config>
+  </device>
+</devices>
+```
+
+### NSO XML Template for PE-2
+```xml
+<devices xmlns="http://tail-f.com/ns/ncs">
+  <device>
+    <name>PE-2</name>
+    <config>
+      <vrf xmlns="urn:ios">
+        <definition>
+          <name>VRF_B</name>
+          <rd>10.10.10.6:65000</rd>
+          <route-target>
+            <export>
+              <asn-ip>65000:200</asn-ip>
+            </export>
+            <import>
+              <asn-ip>65000:200</asn-ip>
+            </import>
+          </route-target>
+        </definition>
+      </vrf>
+      <interface xmlns="urn:ios">
+        <GigabitEthernet>
+          <name>0/3</name>
+          <vrf>
+            <forwarding>VRF_B</forwarding>
+          </vrf>
+          <mtu>9000</mtu>
+        </GigabitEthernet>
+      </interface>
+      <router xmlns="urn:ios">
+        <bgp>
+          <as-no>65000</as-no>
+          <address-family>
+            <with-vrf>
+              <ipv4>
+                <af>unicast</af>
+                <vrf>
+                  <name>VRF_B</name>
+                </vrf>
+                <neighbours>
+                  <neighbour>
+                    <ip>10.0.6.1</ip>
+                    <remote-as>65004</remote-as>
+                    <activate/>
+                  </neighbour>
+                </neighbours>
+              </ipv4>
+            </with-vrf>
+          </address-family>
+        </bgp>
+      </router>
+    </config>
+  </device>
+</devices>
+```
+
+These configurations and XML templates can now be used for your network automation goals with NSO. Adjust the parameters as necessary for your environment.
