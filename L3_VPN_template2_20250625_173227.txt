@@ -1,0 +1,154 @@
+Based on your request for configuring an L3VPN and the provided variables, here’s a generated configuration file and the corresponding NSO XML template for the specified devices.
+
+### Generated Configuration File
+
+**Device: PE1**
+```
+vrf definition Customer_VRF
+    rd 10.1.1.1:65001
+    route-target export 65001:100
+    route-target import 65001:100
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1
+    mtu 9000
+    vrf forwarding Customer_VRF 
+!
+router bgp 65001 
+    address-family ipv4 vrf Customer_VRF 
+        neighbour 192.168.1.1 remote-as 65002
+        neighbour 192.168.1.1 activate  
+    exit-address-family 
+end 
+```
+
+**Device: PE2**
+```
+vrf definition Customer_VRF
+    rd 10.1.1.2:65001
+    route-target export 65001:100
+    route-target import 65001:100
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/2
+    mtu 9000
+    vrf forwarding Customer_VRF 
+!
+router bgp 65001 
+    address-family ipv4 vrf Customer_VRF 
+        neighbour 192.168.1.2 remote-as 65002
+        neighbour 192.168.1.2 activate  
+    exit-address-family 
+end 
+```
+
+---
+
+### NSO XML Template
+
+Here is the corresponding NSO XML template for both PE devices:
+
+```xml
+<devices xmlns="http://tail-f.com/ns/ncs">
+  <device>
+    <name>PE1</name>
+    <config>
+      <vrf xmlns="urn:ios">
+        <definition>
+          <name>Customer_VRF</name>
+          <rd>10.1.1.1:65001</rd>
+          <route-target>
+            <export>
+              <asn-ip>65001:100</asn-ip>
+            </export>
+            <import>
+              <asn-ip>65001:100</asn-ip>
+            </import>
+          </route-target>
+        </definition>
+      </vrf>
+      <interface xmlns="urn:ios">
+        <GigabitEthernet>
+          <name>0/1</name>
+          <mtu>9000</mtu>
+          <vrf>
+            <forwarding>Customer_VRF</forwarding>
+          </vrf>
+        </GigabitEthernet>
+      </interface>
+      <router xmlns="urn:ios">
+        <bgp>
+          <as-no>65001</as-no>
+          <address-family>
+            <with-vrf>
+              <ipv4>
+                <af>unicast</af>
+                <vrf>
+                  <name>Customer_VRF</name>
+                </vrf>
+                <neighbor>
+                  <ip>192.168.1.1</ip>
+                  <remote-as>65002</remote-as>
+                  <activate>true</activate>
+                </neighbor>
+              </ipv4>
+            </with-vrf>
+          </address-family>
+        </bgp>
+      </router>
+    </config>
+  </device>
+  <device>
+    <name>PE2</name>
+    <config>
+      <vrf xmlns="urn:ios">
+        <definition>
+          <name>Customer_VRF</name>
+          <rd>10.1.1.2:65001</rd>
+          <route-target>
+            <export>
+              <asn-ip>65001:100</asn-ip>
+            </export>
+            <import>
+              <asn-ip>65001:100</asn-ip>
+            </import>
+          </route-target>
+        </definition>
+      </vrf>
+      <interface xmlns="urn:ios">
+        <GigabitEthernet>
+          <name>0/2</name>
+          <mtu>9000</mtu>
+          <vrf>
+            <forwarding>Customer_VRF</forwarding>
+          </vrf>
+        </GigabitEthernet>
+      </interface>
+      <router xmlns="urn:ios">
+        <bgp>
+          <as-no>65001</as-no>
+          <address-family>
+            <with-vrf>
+              <ipv4>
+                <af>unicast</af>
+                <vrf>
+                  <name>Customer_VRF</name>
+                </vrf>
+                <neighbor>
+                  <ip>192.168.1.2</ip>
+                  <remote-as>65002</remote-as>
+                  <activate>true</activate>
+                </neighbor>
+              </ipv4>
+            </with-vrf>
+          </address-family>
+        </bgp>
+      </router>
+    </config>
+  </device>
+</devices>
+```
