@@ -1,0 +1,153 @@
+Based on your requirements and the provided details, I have generated the configuration file for the PE devices (PE-1 and PE-2) as well as the corresponding NSO XML template. Both configurations take into account the MTU setting for interfaces according to your specifications.
+
+### Configuration for PE-1
+```
+device name: PE-1
+vrf definition VRF-PE1
+    rd 10.10.10.4:65000
+    route-target export 65000:100
+    route-target import 65000:100
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/1
+    vrf forwarding VRF-PE1 
+    mtu 9000
+!
+router bgp 65000 
+    address-family ipv4 vrf  VRF-PE1 
+        neighbour 10.0.4.1 remote-as 65002
+        neighbour 10.0.4.1 activate  
+    exit-address-family 
+end
+```
+
+### Configuration for PE-2
+```
+device name: PE-2
+vrf definition VRF-PE2
+    rd 10.10.10.6:65000
+    route-target export 65000:200
+    route-target import 65000:200
+!
+address-family ipv4
+exit-address-family
+
+interface GigabitEthernet0/3
+    vrf forwarding VRF-PE2 
+    mtu 9000
+!
+router bgp 65000 
+    address-family ipv4 vrf  VRF-PE2 
+        neighbour 10.0.6.1 remote-as 65004
+        neighbour 10.0.6.1 activate  
+    exit-address-family 
+end
+```
+
+### NSO XML Template for PE-1
+```xml
+<devices xmlns="http://tail-f.com/ns/ncs">
+  <device>
+    <name>PE-1</name>
+    <config>
+      <tailfned xmlns="urn:ios">
+        <police>cirmode</police>
+      </tailfned>
+      <vrf xmlns="urn:ios">
+        <definition>
+          <name>VRF-PE1</name>
+          <rd>10.10.10.4:65000</rd>
+          <route-target>
+            <export>
+              <asn-ip>65000:100</asn-ip>
+            </export>
+            <import>
+              <asn-ip>65000:100</asn-ip>
+            </import>
+          </route-target>
+        </definition>
+      </vrf>
+      <interface xmlns="urn:ios">
+        <GigabitEthernet>
+          <name>0/1</name>
+          <vrf>
+            <forwarding>VRF-PE1</forwarding>
+          </vrf>
+          <mtu>9000</mtu>
+        </GigabitEthernet>
+      </interface>
+      <router xmlns="urn:ios">
+        <bgp>
+          <as-no>65000</as-no>
+          <address-family>
+            <with-vrf>
+              <ipv4>
+                <af>unicast</af>
+                <vrf>
+                  <name>VRF-PE1</name>
+                </vrf>
+              </ipv4>
+            </with-vrf>
+          </address-family>
+        </bgp>
+      </router>
+    </config>
+  </device>
+</devices>
+```
+
+### NSO XML Template for PE-2
+```xml
+<devices xmlns="http://tail-f.com/ns/ncs">
+  <device>
+    <name>PE-2</name>
+    <config>
+      <tailfned xmlns="urn:ios">
+        <police>cirmode</police>
+      </tailfned>
+      <vrf xmlns="urn:ios">
+        <definition>
+          <name>VRF-PE2</name>
+          <rd>10.10.10.6:65000</rd>
+          <route-target>
+            <export>
+              <asn-ip>65000:200</asn-ip>
+            </export>
+            <import>
+              <asn-ip>65000:200</asn-ip>
+            </import>
+          </route-target>
+        </definition>
+      </vrf>
+      <interface xmlns="urn:ios">
+        <GigabitEthernet>
+          <name>0/3</name>
+          <vrf>
+            <forwarding>VRF-PE2</forwarding>
+          </vrf>
+          <mtu>9000</mtu>
+        </GigabitEthernet>
+      </interface>
+      <router xmlns="urn:ios">
+        <bgp>
+          <as-no>65000</as-no>
+          <address-family>
+            <with-vrf>
+              <ipv4>
+                <af>unicast</af>
+                <vrf>
+                  <name>VRF-PE2</name>
+                </vrf>
+              </ipv4>
+            </with-vrf>
+          </address-family>
+        </bgp>
+      </router>
+    </config>
+  </device>
+</devices>
+```
+
+This configuration creates the necessary VRF definitions and sets the MTU as specified while generating the equivalent NSO XML structures for the devices involved. Adjust the route-targets or any other identifiers as necessary to fit into your specific network design.
