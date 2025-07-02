@@ -1,0 +1,32 @@
+<device>PE-1</device>
+<vrf>
+    <name>Client_A</name>
+    <rd>loopback_PE-1:AS_PE-1</rd>
+    <route-target>
+        <export>route_target_export</export>
+        <import>route_target_import</import>
+    </route-target>
+    <address-family>
+        <ipv4>
+            <exit-address-family/>
+        </ipv4>
+    </address-family>
+</vrf>
+<interface>
+    <name>interface_PE-1</name>
+    <vrf-forwarding>Client_A</vrf-forwarding>
+</interface>
+<router-bgp>
+    <as-number>AS_PE-1</as-number>
+    <address-family>
+        <ipv4>
+            <vrf>Client_A</vrf>
+            <neighbour>
+                <ip>neighbour_IP_PE-1</ip>
+                <remote-as>AS_CE</remote-as>
+                <activate/>
+            </neighbour>
+            <exit-address-family/>
+        </ipv4>
+    </address-family>
+</router-bgp>
