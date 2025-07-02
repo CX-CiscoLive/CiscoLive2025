@@ -1,0 +1,35 @@
+<device>
+    <hostname>PE-2</hostname>
+    <configuration>
+        <sample_config>
+            <vrf>
+                <name>Client_A</name>
+                <rd>10.10.10.6:65000</rd>
+                <route_target>
+                    <export>target:65000:2</export>
+                    <import>target:65000:2</import>
+                </route_target>
+            </vrf>
+            <address-family>ipv4</address-family>
+            <exit-address-family/>
+            <interface>
+                <name>GigabitEthernet0/3</name>
+                <vrf_forwarding>Client_A</vrf_forwarding>
+            </interface>
+            <router>
+                <bgp>
+                    <as_number>65000</as_number>
+                    <address_family>
+                        <type>ipv4 vrf</type>
+                        <vrf_name>Client_A</vrf_name>
+                        <neighbour>
+                            <ip>10.0.6.2</ip>
+                            <remote_as>65004</remote_as>
+                            <activate/>
+                        </neighbour>
+                    </address_family>
+                </bgp>
+            </router>
+        </sample_config>
+    </configuration>
+</device>
