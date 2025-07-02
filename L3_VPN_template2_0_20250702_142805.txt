@@ -1,0 +1,48 @@
+<devices xmlns="http://example.com/ns/ncs">
+  <device>
+    <name>PE-1</name>
+    <config>
+      vrf definition VRF_PE-1
+        rd 10.10.10.4:65000
+        route-target export 65000:100
+        route-target import 65000:100
+      !
+      address-family ipv4
+      exit-address-family
+
+      interface GigabitEthernet0/1
+        vrf forwarding VRF_PE-1
+        mtu 9000
+      !
+      router bgp 65000
+        address-family ipv4 vrf VRF_PE-1
+          neighbour 10.0.4.1 remote-as 65002
+          neighbour 10.0.4.1 activate
+        exit-address-family
+      end 
+    </config>
+  </device>
+  <device>
+    <name>PE-2</name>
+    <config>
+      vrf definition VRF_PE-2
+        rd 10.10.10.6:65000
+        route-target export 65000:200
+        route-target import 65000:200
+      !
+      address-family ipv4
+      exit-address-family
+
+      interface GigabitEthernet0/3
+        vrf forwarding VRF_PE-2
+        mtu 9000
+      !
+      router bgp 65000
+        address-family ipv4 vrf VRF_PE-2
+          neighbour 10.0.6.1 remote-as 65004
+          neighbour 10.0.6.1 activate
+        exit-address-family
+      end 
+    </config>
+  </device>
+</devices>
