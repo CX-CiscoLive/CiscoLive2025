@@ -1,0 +1,9 @@
+<devices xmlns="http://example.com/ns/ncs">
+  <device>
+    <name>CE-A3</name>
+    <config>
+      <interface>GigabitEthernet0/0</interface>
+        <mtu>9000</mtu>
+    </config>
+  </device>
+</devices>
