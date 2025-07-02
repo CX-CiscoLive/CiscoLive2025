@@ -1,0 +1,111 @@
+Based on the provided specifications, I will generate the NSO configuration XML file for the L3 VPN with the specified VRF name 'Client_A' and for each PE router (PE-1 and PE-2). Here is the resulting structured XML:
+
+```xml
+<example>
+<devices xmlns="http://tail-f.com/ns/ncs">
+  <device>
+    <name>PE-1</name>
+    <config>
+      <vrf xmlns="urn:ios">
+        <definition>
+          <name>Client_A</name>
+          <rd>10.10.10.4:65000</rd>
+          <route-target>
+            <export>
+              <asn-ip>65000:100</asn-ip>
+            </export>
+            <import>
+              <asn-ip>65000:100</asn-ip>
+            </import>
+          </route-target>
+        </definition>
+      </vrf>
+      <interface xmlns="urn:ios">
+        <GigabitEthernet>
+          <name>0/1</name>
+          <vrf>
+            <forwarding>Client_A</forwarding>
+          </vrf>
+        </GigabitEthernet>
+      </interface>
+      <router xmlns="urn:ios">
+        <bgp>
+          <as-no>65000</as-no>
+          <address-family>
+            <with-vrf>
+              <ipv4>
+                <af>unicast</af>
+                <vrf>
+                  <name>Client_A</name>
+                </vrf>
+                <neighbour>
+                  <ip>10.0.4.2</ip>
+                  <remote-as>65002</remote-as>
+                  <activate/>
+                </neighbour>
+              </ipv4>
+            </with-vrf>
+          </address-family>
+        </bgp>
+      </router>
+    </config>
+  </device>
+  <device>
+    <name>PE-2</name>
+    <config>
+      <vrf xmlns="urn:ios">
+        <definition>
+          <name>Client_A</name>
+          <rd>10.10.10.6:65000</rd>
+          <route-target>
+            <export>
+              <asn-ip>65000:100</asn-ip>
+            </export>
+            <import>
+              <asn-ip>65000:100</asn-ip>
+            </import>
+          </route-target>
+        </definition>
+      </vrf>
+      <interface xmlns="urn:ios">
+        <GigabitEthernet>
+          <name>0/3</name>
+          <vrf>
+            <forwarding>Client_A</forwarding>
+          </vrf>
+        </GigabitEthernet>
+      </interface>
+      <router xmlns="urn:ios">
+        <bgp>
+          <as-no>65000</as-no>
+          <address-family>
+            <with-vrf>
+              <ipv4>
+                <af>unicast</af>
+                <vrf>
+                  <name>Client_A</name>
+                </vrf>
+                <neighbour>
+                  <ip>10.0.6.2</ip>
+                  <remote-as>65004</remote-as>
+                  <activate/>
+                </neighbour>
+              </ipv4>
+            </with-vrf>
+          </address-family>
+        </bgp>
+      </router>
+    </config>
+  </device>
+</devices>
+</example>
+```
+
+### Explanation:
+1. **Device Entries**: Separate sections are created for each PE router (PE-1 and PE-2).
+2. **VRF Configuration**: The VRF named 'Client_A' is defined for each device, with the appropriate route-distinguisher (rd) and route-targets.
+3. **Interface Configuration**: Each interface relevant to the VRF is specified under the respective PE configuration.
+4. **BGP Configuration**: Each router's BGP configuration includes the neighbour definitions, linking the PE to the appropriate CE devices.
+5. **XML Structure**: The XML adheres to proper NSO formatting and indentation requirements for improved readability.
+  
+This XML can be directly pushed to NSO for the configured routers.
