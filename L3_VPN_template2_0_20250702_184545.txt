@@ -1,0 +1,31 @@
+<router>
+    <hostname>PE-1</hostname>
+    <vrf>
+        <name>Client_A</name>
+        <rd>10.10.10.4:65000</rd>
+        <route-target>
+            <export>65000:1</export>
+            <import>65000:1</import>
+        </route-target>
+    </vrf>
+    <address-family>
+        <type>ipv4</type>
+        <vrf>Client_A</vrf>
+    </address-family>
+    <interface>
+        <name>GigabitEthernet0/1</name>
+        <vrf>Client_A</vrf>
+    </interface>
+    <router-bgp>
+        <as-number>65000</as-number>
+        <address-family>
+            <type>ipv4</type>
+            <vrf>Client_A</vrf>
+            <neighbour>
+                <ip>10.0.4.2</ip>
+                <remote-as>65002</remote-as>
+                <activate/>
+            </neighbour>
+        </address-family>
+    </router-bgp>
+</router>
