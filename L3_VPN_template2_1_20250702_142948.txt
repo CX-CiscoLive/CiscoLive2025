@@ -1,0 +1,33 @@
+<devices xmlns="http://example.com/ns/ncs">
+  <device>
+    <name>PE-2</name>
+    <config>
+      vrf definition VRF-CE-A3
+        rd 10.0.6.1:65000
+        route-target export 65000:200
+        route-target import 65000:200
+      !
+      address-family ipv4
+      exit-address-family
+
+      interface GigabitEthernet0/3
+        vrf forwarding VRF-CE-A3
+        mtu 9000
+      !
+      router bgp 65000
+        address-family ipv4 vrf VRF-CE-A3
+          neighbour 10.0.6.1 remote-as 65004
+          neighbour 10.0.6.1 activate  
+        exit-address-family 
+      end 
+    </config>
+  </device>
+  <device>
+    <name>CE-A3</name>
+    <config>
+      interface GigabitEthernet0/0
+        mtu 9000
+      !
+    </config>
+  </device>
+</devices>
