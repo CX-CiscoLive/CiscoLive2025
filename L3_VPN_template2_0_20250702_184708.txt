@@ -1,0 +1,36 @@
+tags, and configurations have been tailored specifically for the MTU requirement while adhering to the standard NSO XML format.
+
+```xml
+<configurations>
+    <device-specific-configuration>
+        <device>
+            <hostname>PE-1</hostname>
+            <interface>
+                <name>GigabitEthernet0/1</name>
+                <mtu>9000</mtu>
+            </interface>
+            <vrf>
+                <name>VRF-PE-1</name>
+                <rd>10.10.10.4:65000</rd>
+                <route-target>
+                    <export>65000:1</export>
+                    <import>65000:1</import>
+                </route-target>
+                <address-family>
+                    <ipv4 />
+                </address-family>
+            </vrf>
+            <bgp>
+                <as-number>65000</as-number>
+                <address-family>
+                    <ipv4>
+                        <vrf>VRF-PE-1</vrf>
+                        <neighbour>
+                            <ip>10.0.4.2</ip>
+                            <remote-as>65002</remote-as>
+                            <activate />
+                        </neighbour>
+                    </ipv4>
+                </address-family>
+            </bgp>
+        </device>
