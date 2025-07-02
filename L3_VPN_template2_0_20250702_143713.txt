@@ -1,0 +1,39 @@
+<configurations>
+    
+    <device-specific-configuration>
+        <router>
+            <hostname>PE-1</hostname>
+            <role>PE</role>
+            <os>IOS-XR</os>
+            <vendor>Cisco</vendor>
+            <as_number>65000</as_number>
+            <router_id>10.10.10.4</router_id>
+            <vrf>
+                <VRF_Name>Default</VRF_Name>
+                <rd>10.10.10.4:65000</rd>
+                <route_target_export>65000:100</route_target_export>
+                <route_target_import>65000:100</route_target_import>
+                <address-family>
+                    <family>ipv4</family>
+                </address-family>
+            </vrf>
+            <interface>
+                <name>GigabitEthernet0/1</name>
+                <description>link to CE-A1</description>
+                <mtu>9000</mtu>
+                <vrf_forwarding>Default</vrf_forwarding>
+            </interface>
+            <router_bgp>
+                <as_number>65000</as_number>
+                <address_family>
+                    <family>ipv4_vrf_Default</family>
+                    <neighbour>
+                        <ip>10.0.4.1</ip>
+                        <remote_as>65002</remote_as>
+                        <activate>true</activate>
+                    </neighbour>
+                </address_family>
+            </router_bgp>
+        </router>
+    </device-specific-configuration>
+</configurations>
