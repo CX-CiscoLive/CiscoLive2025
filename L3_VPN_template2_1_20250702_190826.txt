@@ -1,0 +1,37 @@
+<l2vpn xconnect>
+    <context>CiscoLive test1</context>
+    <member>
+        <interface>GigabitEthernet0/3</interface>
+        <service-instance>100</service-instance>
+    </member>
+    <member>
+        <interface>GigabitEthernet0/3</interface>
+        <pw-class>CiscoLive_test</pw-class>
+    </member>
+</l2vpn>
+<l2vpn pw-class>
+    <name>CiscoLive_test</name>
+    <encapsulation>mpls</encapsulation>
+    <mtu>1540</mtu>
+</l2vpn>
+<interface>
+    <name>GigabitEthernet0/3</name>
+    <service-instance>100</service-instance>
+    <ethernet>
+        <encapsulation>dot1q</encapsulation>
+        <vlan-id>100</vlan-id>
+        <rewrite>
+            <ingress>tag pop 1 symmetric</ingress>
+        </rewrite>
+        <bridge-domain>100</bridge-domain>
+    </ethernet>
+</interface>
+<bridge-domain>
+    <id>100</id>
+    <member>
+        <interface>GigabitEthernet0/3.100</interface>
+    </member>
+    <member>
+        <pseudowire>GigabitEthernet0/3</pseudowire>
+    </member>
+</bridge-domain>
