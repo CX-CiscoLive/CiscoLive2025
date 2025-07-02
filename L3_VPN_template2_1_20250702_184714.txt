@@ -1,0 +1,31 @@
+<device>
+    <hostname>PE-2</hostname>
+    <interface>
+        <name>GigabitEthernet0/3</name>
+        <mtu>9000</mtu>
+    </interface>
+    <vrf>
+        <name>VRF-PE-2</name>
+        <rd>10.10.10.6:65000</rd>
+        <route-target>
+            <export>65000:2</export>
+            <import>65000:2</import>
+        </route-target>
+        <address-family>
+            <ipv4 />
+        </address-family>
+    </vrf>
+    <bgp>
+        <as-number>65000</as-number>
+        <address-family>
+            <ipv4>
+                <vrf>VRF-PE-2</vrf>
+                <neighbour>
+                    <ip>10.0.6.2</ip>
+                    <remote-as>65004</remote-as>
+                    <activate />
+                </neighbour>
+            </ipv4>
+        </address-family>
+    </bgp>
+</device>
