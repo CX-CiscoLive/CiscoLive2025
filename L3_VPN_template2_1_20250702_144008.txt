@@ -1,0 +1,31 @@
+<router>
+    <hostname>PE-2</hostname>
+    <vrf>
+        <name>default</name>
+        <rd>10.10.10.6:65000</rd>
+        <route-target>
+            <export>65000:200</export>
+            <import>65000:200</import>
+        </route-target>
+        <address-family>
+            <type>ipv4</type>
+        </address-family>
+    </vrf>
+    <interface>
+        <name>GigabitEthernet0/3</name>
+        <vrf-forwarding>default</vrf-forwarding>
+        <mtu>9000</mtu>
+    </interface>
+    <router-bgp>
+        <as-number>65000</as-number>
+        <address-family>
+            <type>ipv4</type>
+            <vrf>default</vrf>
+            <neighbour>
+                <ip>10.0.6.1</ip>
+                <remote-as>65004</remote-as>
+                <activate>true</activate>
+            </neighbour>
+        </address-family>
+    </router-bgp>
+</router>
