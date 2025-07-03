@@ -1,0 +1,99 @@
+Here’s the generated NSO XML configuration based on the provided sample schema and user requirements for the L2VPN service. The configuration is structured per device and includes all necessary elements.
+
+```xml
+<devices xmlns="http://tail-f.com/ns/ncs">
+  <device>
+    <name>PE-1</name>
+    <config>
+      <l2vpn xmlns="urn:ios">
+        <xconnect>
+          <context>CiscoLive test1</context>
+          <member>
+            <interface>GigabitEthernet0/1</interface>
+            <service-instance>100</service-instance>
+          </member>
+          <member>
+            <interface>GigabitEthernet0/0</interface>
+            <pw-class>CiscoLive_test</pw-class>
+          </member>
+        </xconnect>
+        <pw-class>
+          <name>CiscoLive_test</name>
+          <encapsulation>mpls</encapsulation>
+          <mtu>1540</mtu>
+        </pw-class>
+        <interface>
+          <name>GigabitEthernet0/1</name>
+          <service-instance>
+            <id>100</id>
+            <encapsulation>dot1q</encapsulation>
+            <vlan-id>100</vlan-id>
+            <rewrite>
+              <ingress>tag pop 1 symmetric</ingress>
+            </rewrite>
+            <bridge-domain>100</bridge-domain>
+          </service-instance>
+        </interface>
+        <bridge-domain>
+          <id>100</id>
+          <member>GigabitEthernet0/1.100</member>
+          <member>
+            <pseudowire>GigabitEthernet0/0</pseudowire>
+          </member>
+        </bridge-domain>
+      </l2vpn>
+    </config>
+  </device>
+  <device>
+    <name>PE-2</name>
+    <config>
+      <l2vpn xmlns="urn:ios">
+        <xconnect>
+          <context>CiscoLive test1</context>
+          <member>
+            <interface>GigabitEthernet0/3</interface>
+            <service-instance>100</service-instance>
+          </member>
+          <member>
+            <interface>GigabitEthernet0/0</interface>
+            <pw-class>CiscoLive_test</pw-class>
+          </member>
+        </xconnect>
+        <pw-class>
+          <name>CiscoLive_test</name>
+          <encapsulation>mpls</encapsulation>
+          <mtu>1540</mtu>
+        </pw-class>
+        <interface>
+          <name>GigabitEthernet0/3</name>
+          <service-instance>
+            <id>100</id>
+            <encapsulation>dot1q</encapsulation>
+            <vlan-id>100</vlan-id>
+            <rewrite>
+              <ingress>tag pop 1 symmetric</ingress>
+            </rewrite>
+            <bridge-domain>100</bridge-domain>
+          </service-instance>
+        </interface>
+        <bridge-domain>
+          <id>100</id>
+          <member>GigabitEthernet0/3.100</member>
+          <member>
+            <pseudowire>GigabitEthernet0/0</pseudowire>
+          </member>
+        </bridge-domain>
+      </l2vpn>
+    </config>
+  </device>
+</devices>
+```
+
+### Explanation:
+- **Device-specific Configuration**: Two separate device configurations are generated for PE-1 and PE-2.
+- **XCONNECT**: The context and members for the cross-connect are included according to the user's request.
+- **PW Class**: Each device has a specific pseudowire class with encapsulation and MTU settings.
+- **Interface Configuration**: The interface details include the ethernet encapsulation, VLAN ID, and bridge domain as requested.
+- **Bridge-domain**: Each bridge domain configuration is specified, including the member interfaces.
+
+This XML output meets the specified requirements from the user query and follows the proper NSO configuration format.
