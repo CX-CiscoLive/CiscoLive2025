@@ -1,0 +1,87 @@
+<devices xmlns="http://tail-f.com/ns/ncs">
+  <device>
+    <name>PE-1</name>
+    <config>
+      <l2vpn xmlns="urn:l2vpn">
+        <xconnect>
+          <context>CiscoLive test1</context>
+          <member>
+            <interface>GigabitEthernet0/1</interface>
+            <service-instance>100</service-instance>
+          </member>
+          <member>
+            <interface>GigabitEthernet0/1</interface>
+            <pw-class>CiscoLive_test</pw-class>
+          </member>
+        </xconnect>
+        <pw-class>
+          <name>CiscoLive_test</name>
+          <encapsulation>mpls</encapsulation>
+          <mtu>1540</mtu>
+        </pw-class>
+        <interface>
+          <name>GigabitEthernet0/1</name>
+          <service-instance>
+            <id>100</id>
+            <encapsulation>dot1q</encapsulation>
+            <vlan-id>100</vlan-id>
+            <rewrite>ingress tag pop 1 symmetric</rewrite>
+            <bridge-domain>100</bridge-domain>
+          </service-instance>
+        </interface>
+        <bridge-domain>
+          <id>100</id>
+          <member>
+            <interface>GigabitEthernet0/1.100</interface>
+          </member>
+          <member>
+            <pseudowire>GigabitEthernet0/1</pseudowire>
+          </member>
+        </bridge-domain>
+      </l2vpn>
+    </config>
+  </device>
+  
+  <device>
+    <name>PE-2</name>
+    <config>
+      <l2vpn xmlns="urn:l2vpn">
+        <xconnect>
+          <context>CiscoLive test1</context>
+          <member>
+            <interface>GigabitEthernet0/3</interface>
+            <service-instance>100</service-instance>
+          </member>
+          <member>
+            <interface>GigabitEthernet0/3</interface>
+            <pw-class>CiscoLive_test</pw-class>
+          </member>
+        </xconnect>
+        <pw-class>
+          <name>CiscoLive_test</name>
+          <encapsulation>mpls</encapsulation>
+          <mtu>1540</mtu>
+        </pw-class>
+        <interface>
+          <name>GigabitEthernet0/3</name>
+          <service-instance>
+            <id>100</id>
+            <encapsulation>dot1q</encapsulation>
+            <vlan-id>100</vlan-id>
+            <rewrite>ingress tag pop 1 symmetric</rewrite>
+            <bridge-domain>100</bridge-domain>
+          </service-instance>
+        </interface>
+        <bridge-domain>
+          <id>100</id>
+          <member>
+            <interface>GigabitEthernet0/3.100</interface>
+          </member>
+          <member>
+            <pseudowire>GigabitEthernet0/3</pseudowire>
+          </member>
+        </bridge-domain>
+      </l2vpn>
+    </config>
+  </device>
+</devices>
