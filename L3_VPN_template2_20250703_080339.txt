@@ -1,0 +1,126 @@
+Based on the provided user query and the sample configuration schemas, here are the generated XML configuration files for the specified PE devices (PE-1 and PE-2).
+
+### XML Configuration for PE-1:
+```xml
+<devices xmlns="http://tail-f.com/ns/ncs">
+  <device>
+    <name>PE-1</name>
+    <config>
+      <l2vpn xmlns="urn:ios">
+        <xconnect>
+          <context>CiscoLive test1</context>
+          <member>
+            <interface>GigabitEthernet0/1</interface>
+            <service-instance>100</service-instance>
+          </member>
+          <member>
+            <interface>GigabitEthernet0/0</interface>
+            <pw-class>CiscoLive_test</pw-class>
+          </member>
+        </xconnect>
+        <pw-class>
+          <name>CiscoLive_test</name>
+          <encapsulation>mpls</encapsulation>
+          <mtu>1540</mtu>
+        </pw-class>
+      </l2vpn>
+      <interface xmlns="urn:ios">
+        <GigabitEthernet>
+          <name>0/1</name>
+          <service>
+            <instance>100</instance>
+            <ethernet>
+              <encapsulation>dot1q</encapsulation>
+              <vlan-id>100</vlan-id>
+              <rewrite>
+                <ingress>
+                  <tag>
+                    <action>pop</action>
+                    <count>1</count>
+                  </tag>
+                </ingress>
+              </rewrite>
+              <bridge-domain>100</bridge-domain>
+            </ethernet>
+          </service>
+        </GigabitEthernet>
+      </interface>
+      <bridge-domain xmlns="urn:ios">
+        <name>100</name>
+        <member>
+          <interface>GigabitEthernet0/1.100</interface>
+        </member>
+        <member>
+          <interface>pseudowire</interface>
+          <interface>GigabitEthernet0/0</interface>
+        </member>
+      </bridge-domain>
+    </config>
+  </device>
+</devices>
+```
+
+### XML Configuration for PE-2:
+```xml
+<devices xmlns="http://tail-f.com/ns/ncs">
+  <device>
+    <name>PE-2</name>
+    <config>
+      <l2vpn xmlns="urn:ios">
+        <xconnect>
+          <context>CiscoLive test1</context>
+          <member>
+            <interface>GigabitEthernet0/3</interface>
+            <service-instance>100</service-instance>
+          </member>
+          <member>
+            <interface>GigabitEthernet0/0</interface>
+            <pw-class>CiscoLive_test</pw-class>
+          </member>
+        </xconnect>
+        <pw-class>
+          <name>CiscoLive_test</name>
+          <encapsulation>mpls</encapsulation>
+          <mtu>1540</mtu>
+        </pw-class>
+      </l2vpn>
+      <interface xmlns="urn:ios">
+        <GigabitEthernet>
+          <name>0/3</name>
+          <service>
+            <instance>100</instance>
+            <ethernet>
+              <encapsulation>dot1q</encapsulation>
+              <vlan-id>100</vlan-id>
+              <rewrite>
+                <ingress>
+                  <tag>
+                    <action>pop</action>
+                    <count>1</count>
+                  </tag>
+                </ingress>
+              </rewrite>
+              <bridge-domain>100</bridge-domain>
+            </ethernet>
+          </service>
+        </GigabitEthernet>
+      </interface>
+      <bridge-domain xmlns="urn:ios">
+        <name>100</name>
+        <member>
+          <interface>GigabitEthernet0/3.100</interface>
+        </member>
+        <member>
+          <interface>pseudowire</interface>
+          <interface>GigabitEthernet0/0</interface>
+        </member>
+      </bridge-domain>
+    </config>
+  </device>
+</devices>
+```
+
+### Notes:
+- Each device-specific configuration is enclosed within `<device>` tags under a `<devices>` root tag, complying with the NSO XML format.
+- The configurations are populated with the provided variables, ensuring that all relevant details such as the XCONNECT_NAME, Vlan_ID, MTU values, and member interface details are correctly reflected for each device.
+- The structure includes all the necessary L2VPN components such as xconnect, pw-class, interface, and bridge-domain as outlined in the user query.
