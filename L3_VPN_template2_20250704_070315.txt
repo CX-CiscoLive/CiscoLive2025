@@ -1,0 +1,110 @@
+Based on the provided user query and variable values, we need to generate an NSO configuration for L3 VPN on PE devices with a VRF name of `CiscoDemo`. The input includes configurations for two PE devices: PE-1 and PE-2. Below is the structured XML configuration for each device according to the specified requirements.
+
+```xml
+<devices xmlns="http://tail-f.com/ns/ncs">
+  <device>
+    <name>PE-1</name>
+    <config>
+      <vrf xmlns="urn:ios">
+        <definition>
+          <name>CiscoDemo</name>
+          <rd>10.10.10.4:65000</rd>
+          <route-target>
+            <export>
+              <asn-ip>65000:100</asn-ip>
+            </export>
+            <import>
+              <asn-ip>65000:100</asn-ip>
+            </import>
+          </route-target>
+        </definition>
+      </vrf>
+      <interface xmlns="urn:ios">
+        <GigabitEthernet>
+          <name>0/1</name>
+          <vrf>
+            <forwarding>CiscoDemo</forwarding>
+          </vrf>
+        </GigabitEthernet>
+      </interface>
+      <router xmlns="urn:ios">
+        <bgp>
+          <as-no>65000</as-no>
+          <address-family>
+            <with-vrf>
+              <ipv4>
+                <af>unicast</af>
+                <vrf>
+                  <name>CiscoDemo</name>
+                </vrf>
+                <neighbour>
+                  <ip>10.0.4.2</ip>
+                  <remote-as>65002</remote-as>
+                  <activate/>
+                </neighbour>
+              </ipv4>
+            </with-vrf>
+          </address-family>
+        </bgp>
+      </router>
+    </config>
+  </device>
+  
+  <device>
+    <name>PE-2</name>
+    <config>
+      <vrf xmlns="urn:ios">
+        <definition>
+          <name>CiscoDemo</name>
+          <rd>10.10.10.6:65000</rd>
+          <route-target>
+            <export>
+              <asn-ip>65000:200</asn-ip>
+            </export>
+            <import>
+              <asn-ip>65000:200</asn-ip>
+            </import>
+          </route-target>
+        </definition>
+      </vrf>
+      <interface xmlns="urn:ios">
+        <GigabitEthernet>
+          <name>0/3</name>
+          <vrf>
+            <forwarding>CiscoDemo</forwarding>
+          </vrf>
+        </GigabitEthernet>
+      </interface>
+      <router xmlns="urn:ios">
+        <bgp>
+          <as-no>65000</as-no>
+          <address-family>
+            <with-vrf>
+              <ipv4>
+                <af>unicast</af>
+                <vrf>
+                  <name>CiscoDemo</name>
+                </vrf>
+                <neighbour>
+                  <ip>10.0.6.2</ip>
+                  <remote-as>65004</remote-as>
+                  <activate/>
+                </neighbour>
+              </ipv4>
+            </with-vrf>
+          </address-family>
+        </bgp>
+      </router>
+    </config>
+  </device>
+  
+</devices>
+```
+
+### Key Points:
+1. **Device-Specific Configuration**: Each PE device configuration is encapsulated within `<device>` tags to specify the settings for PE-1 and PE-2 separately.
+2. **VRF Naming and Route Distinguisher**: Both configurations include the required `CiscoDemo` VRF name and unique route distinguishers based on the connected interfaces.
+3. **Interface Configuration**: The interface configurations reflect the VRF forwarding settings that correspond to each PE device.
+4. **BGP Neighbour Configuration**: The configurations include BGP neighboring settings that connect to the respective CE routers with IP addresses and AS numbers as retrieved from the variables.
+
+This format adheres to the NSO XML configuration standard, ensuring that it is both functional and properly structured for use within an NSO environment.
