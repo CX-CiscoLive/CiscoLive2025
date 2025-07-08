@@ -1,0 +1,116 @@
+Based on your requirements, I will generate two separate XML configuration files for each PE device. The provided variables and details from the user query will be used to populate the XML structure.
+
+Here's the interpretation of the details:
+
+- **VRF Name**: CiscoDemo
+- **AS Number of PE**: 65000
+- **RD for PE-1**: 10.10.10.4:65000
+- **RD for PE-2**: 10.10.10.6:65000
+- **Route Target for both**: 65000:100
+- **Neighbor for PE-1**: 10.0.4.1 (remote AS 65002)
+- **Neighbor for PE-2**: 10.0.6.1 (remote AS 65004)
+
+### Generated XML Configurations
+
+```xml
+<devices xmlns="http://tail-f.com/ns/ncs">
+    <device>
+        <name>PE-1</name>
+        <config>
+            <vrf xmlns="urn:ios">
+                <definition>
+                    <name>CiscoDemo</name>
+                    <rd>10.10.10.4:65000</rd>
+                    <route-target>
+                        <export>
+                            <asn-ip>65000:100</asn-ip>
+                        </export>
+                        <import>
+                            <asn-ip>65000:100</asn-ip>
+                        </import>
+                    </route-target>
+                </definition>
+            </vrf>
+            <interface xmlns="urn:ios">
+                <GigabitEthernet>
+                    <name>0/1</name>
+                    <vrf>
+                        <forwarding>CiscoDemo</forwarding>
+                    </vrf>
+                </GigabitEthernet>
+            </interface>
+            <router xmlns="urn:ios">
+                <bgp>
+                    <as-no>65000</as-no>
+                    <address-family>
+                        <with-vrf>
+                            <ipv4>
+                                <af>unicast</af>
+                                <vrf>
+                                    <name>CiscoDemo</name>
+                                    <neighbor>
+                                        <id>10.0.4.1</id>
+                                        <remote-as>65002</remote-as>
+                                    </neighbor>
+                                </vrf>
+                            </ipv4>
+                        </with-vrf>
+                    </address-family>
+                </bgp>
+            </router>
+        </config>
+    </device>
+    <device>
+        <name>PE-2</name>
+        <config>
+            <vrf xmlns="urn:ios">
+                <definition>
+                    <name>CiscoDemo</name>
+                    <rd>10.10.10.6:65000</rd>
+                    <route-target>
+                        <export>
+                            <asn-ip>65000:100</asn-ip>
+                        </export>
+                        <import>
+                            <asn-ip>65000:100</asn-ip>
+                        </import>
+                    </route-target>
+                </definition>
+            </vrf>
+            <interface xmlns="urn:ios">
+                <GigabitEthernet>
+                    <name>0/3</name>
+                    <vrf>
+                        <forwarding>CiscoDemo</forwarding>
+                    </vrf>
+                </GigabitEthernet>
+            </interface>
+            <router xmlns="urn:ios">
+                <bgp>
+                    <as-no>65000</as-no>
+                    <address-family>
+                        <with-vrf>
+                            <ipv4>
+                                <af>unicast</af>
+                                <vrf>
+                                    <name>CiscoDemo</name>
+                                    <neighbor>
+                                        <id>10.0.6.1</id>
+                                        <remote-as>65004</remote-as>
+                                    </neighbor>
+                                </vrf>
+                            </ipv4>
+                        </with-vrf>
+                    </address-family>
+                </bgp>
+            </router>
+        </config>
+    </device>
+</devices>
+```
+
+### Summary:
+- Each `<device>` element contains the specific configuration for PE-1 and PE-2 using the given parameters.
+- The VRF configuration is named `CiscoDemo`, with appropriate route distinguishers and route targets.
+- Each device has its own configuration for BGP neighbors, indicating the correct AS numbers and IP addresses. 
+- The interfaces are correctly defined as per the provided information.
