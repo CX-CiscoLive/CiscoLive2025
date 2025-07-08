@@ -1,0 +1,110 @@
+Based on the provided information, I've generated the NSO XML configuration files for the two PE devices (PE-1 and PE-2) that will configure L3 VPN with the specified VRF name "CiscoDemo." The details have been filled in according to the variables provided. Below is the well-structured XML output.
+
+```xml
+<devices xmlns="http://tail-f.com/ns/ncs">
+    <device>
+        <name>PE-1</name>
+        <config>
+            <tailfned xmlns="urn:ios">
+                <police>cirmode</police>
+            </tailfned>
+            <vrf xmlns="urn:ios">
+                <definition>
+                    <name>CiscoDemo</name>
+                    <rd>10.10.10.4:65000</rd>
+                    <route-target>
+                        <export>
+                            <asn-ip>65000:100</asn-ip>
+                        </export>
+                        <import>
+                            <asn-ip>65000:100</asn-ip>
+                        </import>
+                    </route-target>
+                </definition>
+            </vrf>
+            <interface xmlns="urn:ios">
+                <GigabitEthernet>
+                    <name>0/1</name>
+                    <vrf>
+                        <forwarding>CiscoDemo</forwarding>
+                    </vrf>
+                </GigabitEthernet>
+            </interface>
+            <router xmlns="urn:ios">
+                <bgp>
+                    <as-no>65000</as-no>
+                    <address-family>
+                        <with-vrf>
+                            <ipv4>
+                                <af>unicast</af>
+                                <vrf>
+                                    <name>CiscoDemo</name>
+                                    <neighbor>
+                                        <id>10.0.4.1</id>
+                                        <remote-as>65002</remote-as>
+                                    </neighbor>
+                                </vrf>
+                            </ipv4>
+                        </with-vrf>
+                    </address-family>
+                </bgp>
+            </router>
+        </config>
+    </device>
+    <device>
+        <name>PE-2</name>
+        <config>
+            <tailfned xmlns="urn:ios">
+                <police>cirmode</police>
+            </tailfned>
+            <vrf xmlns="urn:ios">
+                <definition>
+                    <name>CiscoDemo</name>
+                    <rd>10.10.10.6:65000</rd>
+                    <route-target>
+                        <export>
+                            <asn-ip>65000:100</asn-ip>
+                        </export>
+                        <import>
+                            <asn-ip>65000:100</asn-ip>
+                        </import>
+                    </route-target>
+                </definition>
+            </vrf>
+            <interface xmlns="urn:ios">
+                <GigabitEthernet>
+                    <name>0/3</name>
+                    <vrf>
+                        <forwarding>CiscoDemo</forwarding>
+                    </vrf>
+                </GigabitEthernet>
+            </interface>
+            <router xmlns="urn:ios">
+                <bgp>
+                    <as-no>65000</as-no>
+                    <address-family>
+                        <with-vrf>
+                            <ipv4>
+                                <af>unicast</af>
+                                <vrf>
+                                    <name>CiscoDemo</name>
+                                    <neighbor>
+                                        <id>10.0.6.1</id>
+                                        <remote-as>65004</remote-as>
+                                    </neighbor>
+                                </vrf>
+                            </ipv4>
+                        </with-vrf>
+                    </address-family>
+                </bgp>
+            </router>
+        </config>
+    </device>
+</devices>
+```
+
+### Explanation:
+- The `rd`, `route-target`, `interface`, and `bgp` configurations have been populated with the relevant information from the variable values provided.
+- Each PE device-specific configuration is encapsulated within its own `<device>` tag for clarity and organization.
+- The VRF name is set as "CiscoDemo" as requested in the user query.
+- The correct AS numbers and IP addresses of connected routers have been referenced in the configuration.
